@@ -2,50 +2,49 @@ package database;
 
 import java.sql.*;
 
-public class DataBaseService {
+public class DataBaseService
+{
     private ConfigModel configModel;
+
     private static DataBaseService dataBaseService;
 
     private DataBaseService() {
-        //configModel = new ConfigReader().readConfig();
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-            // Setup the connection with the DB
-            Connection connect = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/nimac?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&"
-                            + "user=nimbo&password=nimbo");
+        configModel = new ConfigModel("src/main/resources/config.properties");
+        try
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection connect = DriverManager.getConnection("jdbc:mysql://" + configModel.getHostIP() + ":" +
+                    configModel.getHostPort() + "/" + configModel.getDbName() +
+                    "?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&"
+                            + "user="+ configModel.getUsername()+ "&" + "password=" + configModel.getPassword());
+
             Statement statement = connect.createStatement();
-            // Result set get the result of the SQL query
 
-            ResultSet resultset = statement.executeQuery("SHOW tables;");
+            ResultSet resultset = statement.executeQuery("SHOW databases;");
 
-            if (statement.execute("SHOW tables;")) {
+            if (statement.execute("SHOW databases;")) {
                 resultset = statement.getResultSet();
             }
 
             while (resultset.next()) {
-                System.out.println(resultset.getString(1));
+                System.out.println(resultset.getString("Database"));
             }
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) {
-        database.DataBaseService.getInstance();
+        DataBaseService.getInstance();
     }
 
-    public static database.DataBaseService getInstance() {
+    public static DataBaseService getInstance() {
         if (dataBaseService == null) {
-            dataBaseService = new database.DataBaseService();
+            dataBaseService = new DataBaseService();
         }
         return dataBaseService;
     }
