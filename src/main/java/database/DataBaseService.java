@@ -6,26 +6,27 @@ public class DataBaseService
     private ConfigModel configModel;
     private static DataBaseService dataBaseService;
 
-    private DataBaseService()
-    {
-        configModel = new ConfigReader().readConfig();
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            // Setup the connection with the DB
-            Connection connect = DriverManager
-                    .getConnection("jdbc:mysql://localhost/feedback?"
-                            + "user=sqluser&password=sqluserpw");
-            Statement statement = connect.createStatement();
-            // Result set get the result of the SQL query
-            ResultSet resultSet = statement.executeQuery("select * from feedback.comments");
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    private DataBaseService()
+//    {
+//        configModel = new ConfigReader().readConfig();
+//        try {
+//            Class.forName(className);
+//        } catch (ClassNotFoundException ex) {
+//            System.out.println("Unable to load the class. Terminating the program");
+//            System.exit(-1);
+//        }
+//        //get the connection
+//        try {
+//            connection = DriverManager.getConnection(URL, user, password);
+//        } catch (SQLException ex) {
+//            System.out.println("Error getting connection: " + ex.getMessage());
+//            System.exit(-1);
+//        } catch (Exception ex) {
+//            System.out.println("Error: " + ex.getMessage());
+//            System.exit(-1);
+//        }
+//
+//    }
 
     public static void main(String[] args)
     {

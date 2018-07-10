@@ -25,12 +25,21 @@ public class RSSFeedParser
             Document document = Jsoup.connect(feedUrl).get();
 
             for (Element element: document.select("item"))
-                System.out.println("=====> " + element);
+            {
+                System.out.println();
+                System.out.println(element.select("link").text());
+                new NewsFinder(element.select("link").text());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return feed;
+    }
+
+    public static void main(String[] args)
+    {
+        new RSSFeedParser("http://www.varzesh3.com/rss/all").readFeed();
     }
 
 }
