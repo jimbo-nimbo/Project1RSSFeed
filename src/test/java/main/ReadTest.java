@@ -1,7 +1,7 @@
 package main;
 
-import controllers.RSSFeedParser;
 import models.RSSFeedModel;
+import parser.RSSFeedParser;
 
 public class ReadTest
 {

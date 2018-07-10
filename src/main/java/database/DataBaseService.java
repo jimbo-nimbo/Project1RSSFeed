@@ -1,36 +1,35 @@
 package database;
-
 import java.sql.*;
 
-public class DataBaseService {
-
-    private static final String HOST_IP = "127.0.0.1";
+public class DataBaseService
+{
+    private ConfigModel configModel;
     private static DataBaseService dataBaseService;
-    private Connection connect = null;
-    private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet = null;
 
-
-    private DataBaseService(){
+    private DataBaseService()
+    {
+        configModel = new ConfigReader().readConfig();
         try {
             Class.forName("com.mysql.jdbc.Driver");
             // Setup the connection with the DB
-            connect = DriverManager
+            Connection connect = DriverManager
                     .getConnection("jdbc:mysql://localhost/feedback?"
                             + "user=sqluser&password=sqluserpw");
-            statement = connect.createStatement();
+            Statement statement = connect.createStatement();
             // Result set get the result of the SQL query
-            resultSet = statement
-                    .executeQuery("select * from feedback.comments");
-            
+            ResultSet resultSet = statement.executeQuery("select * from feedback.comments");
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
 
+    public static void main(String[] args)
+    {
+        DataBaseService.getInstance();
     }
 
     public static DataBaseService getInstance (){
@@ -39,10 +38,5 @@ public class DataBaseService {
         }
         return dataBaseService;
     }
-
-
-
-
-
 
 }
