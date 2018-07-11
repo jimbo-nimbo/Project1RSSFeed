@@ -10,9 +10,10 @@ public class DataBaseServiceTest
     {
         DataBaseService dataBaseService= new DataBaseService();
     }
+
     @Test
     public void addWebSiteTest(){
         DataBaseService dataBaseService= new DataBaseService();
-        dataBaseService.addWebSite(new NewsWebPageModel("google.com2", "new class"));
+        dataBaseService.addWebSite(new NewsWebPageModel("facebook.com", "face1"));
     }
 }

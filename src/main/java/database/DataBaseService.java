@@ -11,6 +11,8 @@ public class DataBaseService implements WebSiteRepository
     private static final String checkDataBaseExist = "CREATE DATABASE IF NOT EXISTS ";
     private static final String checkTableWebSiteExist = "CREATE TABLE IF NOT EXISTS WebSite(url varchar(120), class varchar(120))";
     private static final String checkUrlExistInWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
+    private static final String addUrlToWebSiteTable = "INSERT INTO WebSite (url, class) VALUES (?,?)";
+    private static final String updateUrlClassTagWebSiteTable = "UPDATE WebSite SET class=? WHERE url=?";
     private Connection connect;
 
 
@@ -40,9 +42,20 @@ public class DataBaseService implements WebSiteRepository
             PreparedStatement statement = connect.prepareStatement(checkUrlExistInWebSiteTable + ";");
             statement.setString(1,newsWebPageModel.getUrl());
             ResultSet resultSet = statement.executeQuery();
-            resultSet.first();
-            if(resultSet == null)
-                System.err.println("hi");
+
+            resultSet.beforeFirst();
+            if (!resultSet.next())
+            {
+                PreparedStatement statement1 = connect.prepareStatement(addUrlToWebSiteTable + ";");
+                statement1.setString(1, newsWebPageModel.getUrl());
+                statement1.setString(2,newsWebPageModel.getTargetClass());
+                statement1.execute();
+            } else {
+                PreparedStatement statement2 = connect.prepareStatement( updateUrlClassTagWebSiteTable + ";");
+                statement2.setString(1, newsWebPageModel.getTargetClass());
+                statement2.setString(2, newsWebPageModel.getUrl());
+                statement2.execute();
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
