@@ -1,40 +1,77 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
+import database.RSSItemRepository;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.IOException;
 
 public class NewsWebPageModel implements NewsWebPageInformation
 {
-    private String url;
+    private String link;
     private String targetClass;
 
-    private RSSFeedModel rssFeedModel;
-    private List<RSSItemModel> rssItemModels;
+    private String title;
+    private String description;
 
-    public NewsWebPageModel(String url, String targetClass)
+    private RSSItemRepository rssItemRepository;
+
+    public NewsWebPageModel(String link, String targetClass, RSSItemRepository rssItemRepository)
     {
-        this.url = url;
+        this.link = link;
         this.targetClass = targetClass;
-        rssItemModels = new ArrayList<>();
+        this.rssItemRepository = rssItemRepository;
+
+        fetch();
+    }
+
+    public void fetch()
+    {
+         try {
+            Document document = Jsoup.connect(link).get();
+            title = document.select("title").first().text();
+            description = document.select("description").first().text();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update()
+    {
+        try {
+            Document document = Jsoup.connect(link).get();
+
+            for (Element element: document.select("item"))
+            {
+                rssItemRepository.addRSSItem(new RSSItemModel(
+                        element.select("title").first().text(),
+                        element.select("description").first().text(),
+                        element.select("link").first().text(),
+                        element.select("pubDate").first().text(),
+                        this));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getDescription()
+    {
+        return description;
     }
 
     @Override
-    public String getUrl()
+    public String getLink()
     {
-        return url;
+        return link;
     }
 
-    public RSSFeedModel getRssFeedModel()
-    {
-        return rssFeedModel;
-    }
-
-    public void setRssFeedModel(RSSFeedModel rssFeedModel)
-    {
-        this.rssFeedModel = rssFeedModel;
-    }
-
-    @Override
     public String getTargetClass()
     {
         return targetClass;
@@ -44,8 +81,10 @@ public class NewsWebPageModel implements NewsWebPageInformation
     public String toString()
     {
         return "NewsWebPageModel{" +
-                "url='" + url + '\'' +
+                "link='" + link + '\'' +
                 ", targetClass='" + targetClass + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

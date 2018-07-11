@@ -13,7 +13,8 @@ public class RSSItemModelTest
                 "description",
                 "http://www.varzesh3.com/news/1537695/گرت-ساوتگیت-17-سال-پیش-در-چنین-روزی",
                  "2016.11.13",
-                new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text"));
+                new NewsWebPageModel("http://www.varzesh3.com/rss/all",
+                        "news-page--news-text", null));
 
         System.out.println(rssItemModel);
     }

@@ -1,6 +1,7 @@
 package database;
 
 import models.NewsWebPageModel;
+import models.RSSItemModel;
 import org.junit.Test;
 
 public class DataBaseServiceTest
@@ -14,13 +15,21 @@ public class DataBaseServiceTest
     @Test
     public void addWebSiteTest(){
         DataBaseService dataBaseService= new DataBaseService();
-        dataBaseService.addWebSite(new NewsWebPageModel("faceook.com", "face1"));
+        dataBaseService.addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", dataBaseService));
     }
 
     @Test
     public void getWebsiteListTest(){
+
         DataBaseService dataBaseService= new DataBaseService();
         for (NewsWebPageModel newsWebPageModel : dataBaseService.getWebsites())
             System.out.println(newsWebPageModel);
+    }
+
+    @Test
+    public void addRSSItemTest()
+    {
+        DataBaseService dataBaseService = new DataBaseService();
+        dataBaseService.getWebsites().get(0).update();
     }
 }

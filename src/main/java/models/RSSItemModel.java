@@ -13,6 +13,7 @@ public class RSSItemModel
     private String link;
     private String article;
     private String pubDate;
+    private String newsWebPage;
 
     private NewsWebPageInformation newsWebPageInformation;
 
@@ -24,6 +25,7 @@ public class RSSItemModel
         this.link = link;
         this.pubDate = pubDate;
         this.newsWebPageInformation = newsWebPageInformation;
+        newsWebPage = newsWebPageInformation.getLink();
 
         fetch();
     }
@@ -34,7 +36,6 @@ public class RSSItemModel
         link = URI.create(link).toASCIIString();
         try {
             Document document = Jsoup.connect(link).get();
-
             article = document.select("div."+ newsWebPageInformation.getTargetClass()).text();
         } catch (IOException e) {
             e.printStackTrace();
