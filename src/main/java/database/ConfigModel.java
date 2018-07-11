@@ -13,7 +13,7 @@ public class ConfigModel
     private String username;
     private String password;
 
-     ConfigModel(String url)
+    ConfigModel(String url)
     {
         Properties prop = new Properties();
         InputStream input = null;
@@ -45,11 +45,6 @@ public class ConfigModel
             }
         }
 
-    }
-
-    public static void main(String[] args)
-    {
-        new ConfigModel("src/main/resources/config.properties");
     }
 
     public ConfigModel(String hostIP, String hostPort, String dbName, String username, String password)

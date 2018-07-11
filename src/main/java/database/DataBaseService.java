@@ -2,14 +2,12 @@ package database;
 
 import java.sql.*;
 
-public class DataBaseService
+public class DataBaseService implements WebSiteRepository
 {
-    private ConfigModel configModel;
 
-    private static DataBaseService dataBaseService;
-
-    private DataBaseService() {
-        configModel = new ConfigModel("src/main/resources/config.properties");
+    DataBaseService()
+    {
+        ConfigModel configModel = new ConfigModel("src/main/resources/config.properties");
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -20,7 +18,6 @@ public class DataBaseService
                             + "user="+ configModel.getUsername()+ "&" + "password=" + configModel.getPassword());
 
             Statement statement = connect.createStatement();
-
             ResultSet resultset = statement.executeQuery("SHOW databases;");
 
             if (statement.execute("SHOW databases;")) {
@@ -31,21 +28,14 @@ public class DataBaseService
                 System.out.println(resultset.getString("Database"));
             }
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
-        DataBaseService.getInstance();
-    }
-
-    public static DataBaseService getInstance() {
-        if (dataBaseService == null) {
-            dataBaseService = new DataBaseService();
-        }
-        return dataBaseService;
+    @Override
+    public void addWebSite(String website, String keyword)
+    {
+        // TODO: 7/10/18
     }
 }
