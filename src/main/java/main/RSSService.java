@@ -13,6 +13,7 @@ public class RSSService
 
     public void updateDataBase()
     {
+
     }
 
     public void addWebSite(NewsWebPageModel newsWebPageModel)

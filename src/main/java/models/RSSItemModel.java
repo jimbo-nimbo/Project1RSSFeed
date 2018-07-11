@@ -9,22 +9,19 @@ import java.net.URI;
 public class RSSItemModel
 {
     private String title;
-
     private String description;
     private String link;
-    private String author;
     private String article;
     private String pubDate;
 
     private NewsWebPageInformation newsWebPageInformation;
 
-    public RSSItemModel(String title, String description, String link, String author,
+    public RSSItemModel(String title, String description, String link,
                         String pubDate, NewsWebPageInformation newsWebPageInformation)
     {
         this.title = title;
         this.description = description;
         this.link = link;
-        this.author = author;
         this.pubDate = pubDate;
         this.newsWebPageInformation = newsWebPageInformation;
 
@@ -69,14 +66,6 @@ public class RSSItemModel
         this.link = link;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getPubDate() {
         return pubDate;
     }
@@ -92,7 +81,6 @@ public class RSSItemModel
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", link='" + link + '\'' +
-                ", author='" + author + '\'' +
                 ", article='" + article + '\'' +
                 ", pubDate='" + pubDate + '\'' +
                 ", newsWebPageInformation=" + newsWebPageInformation +

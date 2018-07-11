@@ -14,7 +14,7 @@ public class DataBaseServiceTest
     @Test
     public void addWebSiteTest(){
         DataBaseService dataBaseService= new DataBaseService();
-        dataBaseService.addWebSite(new NewsWebPageModel("facebook.com", "face1"));
+        dataBaseService.addWebSite(new NewsWebPageModel("faceook.com", "face1"));
     }
 
     @Test

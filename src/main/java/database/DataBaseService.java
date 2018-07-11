@@ -11,11 +11,15 @@ public class DataBaseService implements WebSiteRepository
 {
     private static final String dataBaseConfig = "useSSL=false&serverTimezone=UTC";
     private static final String checkDataBaseExist = "CREATE DATABASE IF NOT EXISTS ";
-    private static final String checkTableWebSiteExist = "CREATE TABLE IF NOT EXISTS WebSite(url varchar(120), class varchar(120))";
+    private static final String checkTableWebSiteExist = "CREATE TABLE IF NOT EXISTS WebSite(url varchar (120) PRIMARY KEY , class varchar (120))";
+    private static final String checkTableRssItemExist = "CREATE TABLE IF NOT EXISTS RssItem(title varchar(120), description varchar (120), link MEDIUMTEXT, pubDate DATETIME, newsWebPage varchar (120), FOREIGN KEY (newsWebPage) REFERENCES WebSite(url))";
     private static final String checkUrlExistInWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
     private static final String addUrlToWebSiteTable = "INSERT INTO WebSite (url, class) VALUES (?,?)";
     private static final String updateUrlClassTagWebSiteTable = "UPDATE WebSite SET class=? WHERE url=?";
     private static final String getWebSitesFromWebSiteTable = "SELECT * FROM WebSite";
+
+
+
     private Connection connect;
 
 
@@ -33,6 +37,7 @@ public class DataBaseService implements WebSiteRepository
             statement.execute(checkDataBaseExist + configModel.getDbName() + ";");
             statement.execute("USE " + configModel.getDbName() + ";");
             statement.execute(checkTableWebSiteExist + ";");
+            statement.execute(checkTableRssItemExist + ";");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
