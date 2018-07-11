@@ -12,7 +12,6 @@ public class RSSFeedParser
 
     public RSSFeedModel readFeed(String feedUrl)
     {
-        RSSFeedModel feed = null;
 
         try {
             Document document = Jsoup.connect(feedUrl).get();
@@ -25,7 +24,7 @@ public class RSSFeedParser
             e.printStackTrace();
         }
 
-        return feed;
+        return null;
     }
 
 }

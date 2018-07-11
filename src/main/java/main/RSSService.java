@@ -2,6 +2,7 @@ package main;
 
 import database.DataBaseService;
 import database.WebSiteRepository;
+import models.NewsWebPageModel;
 
 import java.util.ArrayList;
 
@@ -13,9 +14,9 @@ public class RSSService
     {
     }
 
-    public void addWebSite(String webSite, String targetWord)
+    public void addWebSite(NewsWebPageModel newsWebPageModel)
     {
-
+        webSiteRepository.addWebSite(newsWebPageModel);
     }
 
     public String getWebSiteRssData()

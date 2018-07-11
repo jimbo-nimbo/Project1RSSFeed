@@ -18,7 +18,7 @@ public class ArticleFinder
 
         try {
             Document document = Jsoup.connect(url).get();
-            article = document.select(targetClass).text();
+            article = document.select("div."+ targetClass).text();
         } catch (IOException e) {
             e.printStackTrace();
         }

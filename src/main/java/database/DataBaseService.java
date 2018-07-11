@@ -38,6 +38,6 @@ public class DataBaseService implements WebSiteRepository
     @Override
     public void addWebSite(NewsWebPageModel newsWebPageModel)
     {
-        
+
     }
 }

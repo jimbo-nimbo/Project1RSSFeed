@@ -1,6 +1,8 @@
 package database;
 
+import models.NewsWebPageModel;
+
 public interface WebSiteRepository
 {
-    void addWebSite(String website, String keyword);
+    void addWebSite(NewsWebPageModel newsWebPageModel);
 }

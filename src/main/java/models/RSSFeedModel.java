@@ -8,11 +8,12 @@ public class RSSFeedModel
     private final String title;
     private final String link;
     private final String description;
-    private String language;
+    private final String language;
     private final String copyright;
-    private String pubDate;
+    private final String pubDate;
 
-    private List<RSSItemModel> entries = new ArrayList<>();
+    private final List<RSSItemModel> entries = new ArrayList<>();
+
 
     public RSSFeedModel(String title, String link, String description, String language, String copyright, String pubDate) {
         this.title = title;
