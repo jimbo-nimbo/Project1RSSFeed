@@ -12,7 +12,7 @@ public class RSSFeedModel
     private final String copyright;
     private String pubDate;
 
-    private List<RSSItemModel> entries = new ArrayList<RSSItemModel>();
+    private List<RSSItemModel> entries = new ArrayList<>();
 
     public RSSFeedModel(String title, String link, String description, String language, String copyright, String pubDate) {
         this.title = title;
