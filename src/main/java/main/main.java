@@ -7,6 +7,6 @@ public class main
     {
         RSSService rssService = new RSSService();
 
-        rssService.addWebSite("http://www.varzesh3.com/rss/all", "news-page--news-text");
+        //rssService.addWebSite("http://www.varzesh3.com/rss/all", "news-page--news-text");
     }
 }
