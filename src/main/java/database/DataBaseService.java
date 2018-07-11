@@ -1,5 +1,7 @@
 package database;
 
+import models.NewsWebPageModel;
+
 import java.sql.*;
 
 public class DataBaseService implements WebSiteRepository
@@ -20,9 +22,9 @@ public class DataBaseService implements WebSiteRepository
             Statement statement = connect.createStatement();
             ResultSet resultset = statement.executeQuery("SHOW databases;");
 
-            if (statement.execute("SHOW databases;")) {
-                resultset = statement.getResultSet();
-            }
+//            if (statement.execute("SHOW databases;")) {
+//                resultset = statement.getResultSet();
+//            }
 
             while (resultset.next()) {
                 System.out.println(resultset.getString("Database"));
@@ -34,8 +36,8 @@ public class DataBaseService implements WebSiteRepository
     }
 
     @Override
-    public void addWebSite(String website, String keyword)
+    public void addWebSite(NewsWebPageModel newsWebPageModel)
     {
-        // TODO: 7/10/18
+        
     }
 }
