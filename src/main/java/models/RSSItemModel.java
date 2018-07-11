@@ -1,20 +1,48 @@
 package models;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
+import java.net.URI;
+
 public class RSSItemModel
 {
     private String title;
+
     private String description;
     private String link;
     private String author;
-    private String guid;
+    private String article;
+    private String pubDate;
 
-    public RSSItemModel(String title, String description, String link, String author, String guid)
+    private NewsWebPageInformation newsWebPageInformation;
+
+    public RSSItemModel(String title, String description, String link, String author,
+                        String pubDate, NewsWebPageInformation newsWebPageInformation)
     {
         this.title = title;
         this.description = description;
         this.link = link;
         this.author = author;
-        this.guid = guid;
+        this.pubDate = pubDate;
+        this.newsWebPageInformation = newsWebPageInformation;
+
+        fetch();
+    }
+
+    public void fetch()
+    {
+        //for non-ASCII URLs
+        link = URI.create(link).toASCIIString();
+        try {
+            Document document = Jsoup.connect(link).get();
+
+            article = document.select("div."+ newsWebPageInformation.getTargetClass()).text();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String getTitle() {
@@ -49,19 +77,25 @@ public class RSSItemModel
         this.author = author;
     }
 
-    public String getGuid() {
-        return guid;
+    public String getPubDate() {
+        return pubDate;
     }
 
-    public void setGuid(String guid) {
-        this.guid = guid;
+    public void setPubDate(String pubDate) {
+        this.pubDate = pubDate;
     }
 
     @Override
-    public String toString() {
-        return "FeedMessage [title=" + title + ", description=" + description
-                + ", link=" + link + ", author=" + author + ", guid=" + guid
-                + "]";
+    public String toString()
+    {
+        return "RSSItemModel{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", link='" + link + '\'' +
+                ", author='" + author + '\'' +
+                ", article='" + article + '\'' +
+                ", pubDate='" + pubDate + '\'' +
+                ", newsWebPageInformation=" + newsWebPageInformation +
+                '}';
     }
-
 }

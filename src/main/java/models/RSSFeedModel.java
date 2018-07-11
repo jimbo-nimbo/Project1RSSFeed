@@ -1,8 +1,5 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RSSFeedModel
 {
     private final String title;
@@ -12,8 +9,6 @@ public class RSSFeedModel
     private final String copyright;
     private final String pubDate;
 
-    private final List<RSSItemModel> entries = new ArrayList<>();
-
 
     public RSSFeedModel(String title, String link, String description, String language, String copyright, String pubDate) {
         this.title = title;
@@ -22,10 +17,6 @@ public class RSSFeedModel
         this.language = language;
         this.copyright = copyright;
         this.pubDate = pubDate;
-    }
-
-    public List<RSSItemModel> getMessages() {
-        return entries;
     }
 
     public String getTitle() {

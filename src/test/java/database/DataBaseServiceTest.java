@@ -21,6 +21,6 @@ public class DataBaseServiceTest
     public void getWebsiteListTest(){
         DataBaseService dataBaseService= new DataBaseService();
         for (NewsWebPageModel newsWebPageModel : dataBaseService.getWebsites())
-            System.out.println("url : " + newsWebPageModel.getUrl() + " , class : " + newsWebPageModel.getTargetClass());
+            System.out.println(newsWebPageModel);
     }
 }
