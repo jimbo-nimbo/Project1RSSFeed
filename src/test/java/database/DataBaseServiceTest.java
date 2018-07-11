@@ -16,4 +16,11 @@ public class DataBaseServiceTest
         DataBaseService dataBaseService= new DataBaseService();
         dataBaseService.addWebSite(new NewsWebPageModel("facebook.com", "face1"));
     }
+
+    @Test
+    public void getWebsiteListTest(){
+        DataBaseService dataBaseService= new DataBaseService();
+        for (NewsWebPageModel newsWebPageModel : dataBaseService.getWebsites())
+            System.out.println("url : " + newsWebPageModel.getUrl() + " , class : " + newsWebPageModel.getTargetClass());
+    }
 }

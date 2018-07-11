@@ -4,6 +4,8 @@ import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import models.NewsWebPageModel;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataBaseService implements WebSiteRepository
 {
@@ -13,6 +15,7 @@ public class DataBaseService implements WebSiteRepository
     private static final String checkUrlExistInWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
     private static final String addUrlToWebSiteTable = "INSERT INTO WebSite (url, class) VALUES (?,?)";
     private static final String updateUrlClassTagWebSiteTable = "UPDATE WebSite SET class=? WHERE url=?";
+    private static final String getWebSitesFromWebSiteTable = "SELECT * FROM WebSite";
     private Connection connect;
 
 
@@ -60,5 +63,31 @@ public class DataBaseService implements WebSiteRepository
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<NewsWebPageModel> getWebsites()
+    {
+        ArrayList<NewsWebPageModel> urls = null;
+        try
+        {
+            PreparedStatement preparedStatement = connect.prepareStatement(getWebSitesFromWebSiteTable + ";");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            urls = new ArrayList<>();
+
+            resultSet.beforeFirst();
+            while(resultSet.next())
+            {
+                urls.add(new NewsWebPageModel(resultSet.getString("url"),
+                        resultSet.getString("class")));
+            }
+
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return urls;
     }
 }

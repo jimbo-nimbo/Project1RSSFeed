@@ -5,12 +5,13 @@ import database.WebSiteRepository;
 import models.NewsWebPageModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RSSService
 {
     private WebSiteRepository webSiteRepository;
 
-    public void upDateDataBase()
+    public void updateDataBase()
     {
     }
 
@@ -29,8 +30,8 @@ public class RSSService
         return null;
     }
 
-    public ArrayList<String> getWebSites()
+    public List<NewsWebPageModel> getWebSites()
     {
-        return null;
+        return webSiteRepository.getWebsites();
     }
 }
