@@ -9,30 +9,29 @@ import java.util.List;
 
 public class DataBaseService implements WebSiteRepository, RSSItemRepository
 {
-    private static final String dataBaseConfig = "useSSL=false&serverTimezone=UTC";
+    private static final String dataBaseConfig = "useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
     private static final String checkDataBaseExist = "CREATE DATABASE IF NOT EXISTS ";
     private static final String checkTableWebSiteExist = "CREATE TABLE IF NOT EXISTS WebSite" +
-            "(url varchar (200) PRIMARY KEY ," +
-            " class varchar (200))";
+            "(url varchar (300) PRIMARY KEY ," +
+            " class varchar (200)) CHARACTER SET utf8mb4 COLLATE utf8mb4_persian_ci";
     private static final String checkTableRssItemExist = "CREATE TABLE IF NOT EXISTS RssItem" +
             "(title mediumtext," +
             " description mediumtext," +
-            " link varchar(1000) PRIMARY KEY ," +
+            " link varchar(300) PRIMARY KEY ," +
             " pubDate mediumtext," +
-            " newsWebPage varchar(200)," +
-            " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url))";
+            " article longtext," +
+            " newsWebPage varchar(300)," +
+            " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url)) CHARACTER SET utf8mb4 COLLATE utf8mb4_persian_ci";
     private static final String checkUrlExistInWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
     private static final String addUrlToWebSiteTable = "INSERT INTO WebSite (url, class) VALUES (?,?)";
     private static final String updateUrlClassTagWebSiteTable = "UPDATE WebSite SET class=? WHERE url=?";
     private static final String getWebSitesFromWebSiteTable = "SELECT * FROM WebSite";
     private static final String addRSSItemToRSSItemsTable = "INSERT  INTO RssItem " +
-            "(title, description, link, pubDate, newsWebPage) VALUES " +
-            "(?, ?, ?, ?, ?)";
-
-
+            "(title, description, link, pubDate, article, newsWebPage) VALUES " +
+            "(?, ?, ?, ?, ?, (SELECT (url) FROM WebSite WHERE url LIKE ?))";
+    private static final String selectRssItemFromRssTable = "SELECT * FROM RssItem WHERE link LIKE ?";
 
     private Connection connect;
-
 
     DataBaseService()
     {
@@ -112,15 +111,24 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
     {
         try
         {
-            PreparedStatement preparedStatement = connect.prepareStatement(addRSSItemToRSSItemsTable + ";");
+            PreparedStatement selectRSS = connect.prepareStatement(selectRssItemFromRssTable + ";");
 
-            preparedStatement.setString(1, rssItemModel.getTitle());
-            preparedStatement.setString(2, rssItemModel.getDescription());
-            preparedStatement.setString(3, rssItemModel.getLink());
-            preparedStatement.setString(4, rssItemModel.getPubDate());
-            preparedStatement.setString(5, rssItemModel.getLink());
+            selectRSS.setString(1, rssItemModel.getLink());
+            ResultSet resultSet = selectRSS.executeQuery();
+            resultSet.beforeFirst();
+            if(!resultSet.next())
+            {
+                PreparedStatement addRSS = connect.prepareStatement(addRSSItemToRSSItemsTable + ";");
 
-            preparedStatement.execute();
+                addRSS.setString(1, rssItemModel.getTitle());
+                addRSS.setString(2, rssItemModel.getDescription());
+                addRSS.setString(3, rssItemModel.getLink());
+                addRSS.setString(4, rssItemModel.getPubDate());
+                addRSS.setString(5, rssItemModel.getArticle());
+                addRSS.setString(6, rssItemModel.getNewsWebPage());
+
+                addRSS.execute();
+            }
         } catch (SQLException e)
         {
             e.printStackTrace();

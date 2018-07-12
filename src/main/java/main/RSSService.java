@@ -13,7 +13,7 @@ public class RSSService
 
     public void updateDataBase()
     {
-
+        webSiteRepository.getWebsites().forEach(NewsWebPageModel::update);
     }
 
     public void addWebSite(NewsWebPageModel newsWebPageModel)

@@ -16,6 +16,7 @@ public class DataBaseServiceTest
     public void addWebSiteTest(){
         DataBaseService dataBaseService= new DataBaseService();
         dataBaseService.addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", dataBaseService));
+//        dataBaseService.addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" , "item-body", dataBaseService));
     }
 
     @Test

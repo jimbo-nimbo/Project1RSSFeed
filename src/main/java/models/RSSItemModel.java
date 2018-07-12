@@ -33,14 +33,19 @@ public class RSSItemModel
     public void fetch()
     {
         //for non-ASCII URLs
-        link = URI.create(link).toASCIIString();
+        String asciiLink = URI.create(link).toASCIIString();
         try {
-            Document document = Jsoup.connect(link).get();
+            Document document = Jsoup.connect(asciiLink).get();
             article = document.select("div."+ newsWebPageInformation.getTargetClass()).text();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public String getArticle()
+    {
+        return article;
     }
 
     public String getTitle() {
@@ -73,6 +78,11 @@ public class RSSItemModel
 
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
+    }
+
+    public String getNewsWebPage()
+    {
+        return newsWebPage;
     }
 
     @Override
