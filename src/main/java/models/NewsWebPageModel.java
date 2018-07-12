@@ -12,7 +12,6 @@ public class NewsWebPageModel implements NewsWebPageInformation
 {
     private String link;
     private String targetClass;
-
     private String title;
     private String description;
 
