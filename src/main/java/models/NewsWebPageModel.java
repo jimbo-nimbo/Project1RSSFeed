@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class NewsWebPageModel implements NewsWebPageInformation
 {
@@ -75,6 +76,25 @@ public class NewsWebPageModel implements NewsWebPageInformation
     public String getTargetClass()
     {
         return targetClass;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NewsWebPageModel that = (NewsWebPageModel) o;
+        return Objects.equals(link, that.link) &&
+                Objects.equals(targetClass, that.targetClass) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode()
+    {
+
+        return Objects.hash(link, targetClass, title, description);
     }
 
     @Override

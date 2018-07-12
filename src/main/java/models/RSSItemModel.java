@@ -17,6 +17,18 @@ public class RSSItemModel
 
     private NewsWebPageInformation newsWebPageInformation;
 
+    //constructor for getting data from database
+    public RSSItemModel(String title, String description, String link, String article, String pubDate, NewsWebPageInformation newsWebPageInformation)
+    {
+        this.title = title;
+        this.description = description;
+        this.link = link;
+        this.article = article;
+        this.pubDate = pubDate;
+        this.newsWebPageInformation = newsWebPageInformation;
+        newsWebPage = newsWebPageInformation.getLink();
+    }
+
     public RSSItemModel(String title, String description, String link,
                         String pubDate, NewsWebPageInformation newsWebPageInformation)
     {

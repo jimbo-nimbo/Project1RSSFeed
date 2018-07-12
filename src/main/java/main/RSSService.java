@@ -1,15 +1,16 @@
 package main;
 
-import database.DataBaseService;
+import database.RSSItemRepository;
 import database.WebSiteRepository;
 import models.NewsWebPageModel;
+import models.RSSItemModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RSSService
 {
     private WebSiteRepository webSiteRepository;
+    private RSSItemRepository rssItemRepository;
 
     public void updateDataBase()
     {
@@ -21,14 +22,24 @@ public class RSSService
         webSiteRepository.addWebSite(newsWebPageModel);
     }
 
-    public String getWebSiteRssData()
+    public List<RSSItemModel> getWebSiteRssData(String webPageLink)
     {
-        return null;
+        return webSiteRepository.getRSSDataFromWebSite(webPageLink);
     }
 
-    public String getArticle()
+    public List<RSSItemModel> getAllRssData()
     {
-        return null;
+        return webSiteRepository.getAllRSSData();
+    }
+
+    public NewsWebPageModel getWebpage(String webSiteLink)
+    {
+        return webSiteRepository.getWebsite(webSiteLink);
+    }
+
+    public String getArticle(String articleLink)
+    {
+        return rssItemRepository.getArticle(articleLink);
     }
 
     public List<NewsWebPageModel> getWebSites()
