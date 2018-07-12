@@ -1,5 +1,6 @@
 package main;
 
+import database.DataBaseService;
 import database.RSSItemRepository;
 import database.WebSiteRepository;
 import models.NewsWebPageModel;
@@ -12,9 +13,11 @@ public class RSSService
     private WebSiteRepository webSiteRepository;
     private RSSItemRepository rssItemRepository;
 
-    public void updateDataBase()
+    public RSSService()
     {
-        webSiteRepository.getWebsites().forEach(NewsWebPageModel::update);
+        DataBaseService dataBaseService= DataBaseService.getInstance();
+        webSiteRepository = dataBaseService;
+        rssItemRepository = dataBaseService;
     }
 
     public void addWebSite(NewsWebPageModel newsWebPageModel)
@@ -22,8 +25,27 @@ public class RSSService
         webSiteRepository.addWebSite(newsWebPageModel);
     }
 
-    public List<RSSItemModel> getWebSiteRssData(String webPageLink)
+    public void addWebSite(String websiteLink, String targetClass)
     {
+        webSiteRepository.addWebSite(new NewsWebPageModel(websiteLink,targetClass,rssItemRepository));
+    }
+
+    public List<NewsWebPageModel> getWebSites()
+    {
+        return webSiteRepository.getWebsites();
+    }
+
+    public void updateDataBase()
+    {
+        webSiteRepository.getWebsites().forEach(NewsWebPageModel::update);
+    }
+
+    public void updateDatabaseForWebsite(String webSiteLink)
+    {
+        webSiteRepository.getWebsite(webSiteLink).update();
+    }
+
+    public List<RSSItemModel> getWebSiteRssData(String webPageLink) {
         return webSiteRepository.getRSSDataFromWebSite(webPageLink);
     }
 
@@ -32,18 +54,8 @@ public class RSSService
         return webSiteRepository.getAllRSSData();
     }
 
-    public NewsWebPageModel getWebpage(String webSiteLink)
-    {
-        return webSiteRepository.getWebsite(webSiteLink);
-    }
-
     public String getArticle(String articleLink)
     {
         return rssItemRepository.getArticle(articleLink);
-    }
-
-    public List<NewsWebPageModel> getWebSites()
-    {
-        return webSiteRepository.getWebsites();
     }
 }

@@ -14,7 +14,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
     private static final String checkDataBaseExist = "CREATE DATABASE IF NOT EXISTS ";
     private static final String checkTableWebSiteExist = "CREATE TABLE IF NOT EXISTS WebSite" +
             "(url varchar (300) PRIMARY KEY ," +
-            " class varchar (200)) CHARACTER SET utf8mb4 COLLATE utf8mb4_persian_ci";
+            " class varchar (200)) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
     private static final String checkTableRssItemExist = "CREATE TABLE IF NOT EXISTS RssItem" +
             "(title mediumtext," +
             " description mediumtext," +
@@ -22,7 +22,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
             " pubDate mediumtext," +
             " article longtext," +
             " newsWebPage varchar(300)," +
-            " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url)) CHARACTER SET utf8mb4 COLLATE utf8mb4_persian_ci";
+            " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url)) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
     private static final String checkUrlExistInWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
     private static final String addUrlToWebSiteTable = "INSERT INTO WebSite (url, class) VALUES (?,?)";
     private static final String updateUrlClassTagWebSiteTable = "UPDATE WebSite SET class=? WHERE url=?";
@@ -39,7 +39,17 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
 
     HashMap<String, NewsWebPageModel> webPageInformationHashMap;
 
-    DataBaseService()
+    private static DataBaseService dataBaseService;
+    public static DataBaseService getInstance()
+    {
+        if (dataBaseService == null)
+        {
+            dataBaseService = new DataBaseService();
+        }
+        return dataBaseService;
+    }
+
+    private DataBaseService()
     {
         ConfigModel configModel = new ConfigModel("src/main/resources/config.properties");
         webPageInformationHashMap = new HashMap<>();
@@ -217,7 +227,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
     {
         try
         {
-            PreparedStatement selectRSS = connect.prepareStatement(selectRssItemFromRssTableByWebPage + ";");
+            PreparedStatement selectRSS = connect.prepareStatement(selectRssByLink + ";");
 
             selectRSS.setString(1, rssItemModel.getLink());
             ResultSet resultSet = selectRSS.executeQuery();

@@ -9,57 +9,50 @@ public class DataBaseServiceTest
     @Test
     public void mainTest()
     {
-        DataBaseService dataBaseService= new DataBaseService();
+        DataBaseService.getInstance();
     }
 
     @Test
     public void addWebSiteTest(){
-        DataBaseService dataBaseService= new DataBaseService();
-        dataBaseService.addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", dataBaseService));
-        dataBaseService.addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" , "item-body", dataBaseService));
+        DataBaseService.getInstance().addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", DataBaseService.getInstance()));
+        DataBaseService.getInstance().addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" , "item-body", DataBaseService.getInstance()));
     }
 
     @Test
     public void getWebsiteListTest(){
 
-        DataBaseService dataBaseService= new DataBaseService();
-        for (NewsWebPageModel newsWebPageModel : dataBaseService.getWebsites())
+        for (NewsWebPageModel newsWebPageModel : DataBaseService.getInstance().getWebsites())
             System.out.println(newsWebPageModel);
     }
 
     @Test
     public void updateRSSItemsTest()
     {
-        DataBaseService dataBaseService = new DataBaseService();
-        dataBaseService.getWebsites().get(1).update();
+        DataBaseService.getInstance().getWebsites().get(1).update();
     }
 
     @Test
     public void getWebsiteTest()
     {
-        DataBaseService dataBaseService = new DataBaseService();
-        System.out.println(dataBaseService.getWebsite("http://www.varzesh3.com/rss/all"));
+        System.out.println(DataBaseService.getInstance().getWebsite("http://www.varzesh3.com/rss/all"));
     }
 
     @Test
     public void getAllRSSDataTest()
     {
-        DataBaseService dataBaseService = new DataBaseService();
-        System.out.println(dataBaseService.getAllRSSData());
+        System.out.println(DataBaseService.getInstance().getAllRSSData());
     }
 
     @Test
     public void getRSSDataFromWebSiteTest()
     {
-        DataBaseService dataBaseService = new DataBaseService();
-        System.out.println(dataBaseService.getRSSDataFromWebSite("https://en.isna.ir/rss"));
+        System.out.println(DataBaseService.getInstance().getRSSDataFromWebSite("https://en.isna.ir/rss"));
     }
 
     @Test
     public void getArticleTest()
     {
-        DataBaseService dataBaseService = new DataBaseService();
-        System.out.println(dataBaseService.getArticle("http://www.varzesh3.com/news/1537867/ضیایی-اتاق-رییس-فدراسیون-خانه-بازیکنان-است"));
+        System.out.println(DataBaseService.getInstance().getArticle("http://www.varzesh3.com/news/1537867/ضیایی-اتاق-رییس-فدراسیون-خانه-بازیکنان-است"));
     }
 
 }
