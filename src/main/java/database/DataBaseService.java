@@ -10,30 +10,8 @@ import java.util.List;
 
 public class DataBaseService implements WebSiteRepository, RSSItemRepository
 {
+
     private static final String dataBaseConfig = "useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
-    private static final String checkDataBaseExist = "CREATE DATABASE IF NOT EXISTS ";
-    private static final String checkTableWebSiteExist = "CREATE TABLE IF NOT EXISTS WebSite" +
-            "(url varchar (300) PRIMARY KEY ," +
-            " class varchar (200)) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
-    private static final String checkTableRssItemExist = "CREATE TABLE IF NOT EXISTS RssItem" +
-            "(title mediumtext," +
-            " description mediumtext," +
-            " link varchar(300) PRIMARY KEY ," +
-            " pubDate mediumtext," +
-            " article longtext," +
-            " newsWebPage varchar(300)," +
-            " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url)) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
-    private static final String checkUrlExistInWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
-    private static final String addUrlToWebSiteTable = "INSERT INTO WebSite (url, class) VALUES (?,?)";
-    private static final String updateUrlClassTagWebSiteTable = "UPDATE WebSite SET class=? WHERE url=?";
-    private static final String getAllWebSitesFromWebSiteTable = "SELECT * FROM WebSite";
-    private static final String selectWebSitesFromWebSiteTable = "SELECT * FROM WebSite WHERE url LIKE ?";
-    private static final String addRSSItemToRSSItemsTable = "INSERT  INTO RssItem " +
-            "(title, description, link, pubDate, article, newsWebPage) VALUES " +
-            "(?, ?, ?, ?, ?, (SELECT (url) FROM WebSite WHERE url LIKE ?))";
-    private static final String selectRssItemFromRssTableByWebPage = "SELECT * FROM RssItem WHERE newsWebPage LIKE ?";
-    private static final String selectRssByLink = "SELECT * FROM RssItem WHERE link LIKE ?";
-    private static final String selectAllRss = "SELECT * FROM RssItem";
 
     private Connection connect;
 
@@ -61,10 +39,10 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
                     "?" + dataBaseConfig, configModel.getUsername(), configModel.getPassword());
 
             Statement statement = connect.createStatement();
-            statement.execute(checkDataBaseExist + configModel.getDbName() + ";");
+            statement.execute( DataBaseCreationQueries.CREATE_DATABASE_IF_NOT_EXISTS.toString() + configModel.getDbName() + ";");
             statement.execute("USE " + configModel.getDbName() + ";");
-            statement.execute(checkTableWebSiteExist + ";");
-            statement.execute(checkTableRssItemExist + ";");
+            statement.execute(WebsiteTableQueries.CREATE_WEBSITE_TABLE_IF_NOT_EXISTS.toString() );
+            statement.execute(RSSItemTableQueries.CREATE_RSSITEM_TABLE_IF_NOT_EXISTS.toString());
         } catch (ClassNotFoundException | SQLException e)
         {
             e.printStackTrace();
@@ -77,20 +55,20 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
     {
         try
         {
-            PreparedStatement statement = connect.prepareStatement(checkUrlExistInWebSiteTable + ";");
+            PreparedStatement statement = connect.prepareStatement(WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString());
             statement.setString(1, newsWebPageModel.getLink());
             ResultSet resultSet = statement.executeQuery();
 
             resultSet.beforeFirst();
             if (!resultSet.next())
             {
-                PreparedStatement statement1 = connect.prepareStatement(addUrlToWebSiteTable + ";");
+                PreparedStatement statement1 = connect.prepareStatement(WebsiteTableQueries.INSERT_INTO_TABLE.toString());
                 statement1.setString(1, newsWebPageModel.getLink());
                 statement1.setString(2, newsWebPageModel.getTargetClass());
                 statement1.execute();
             } else
             {
-                PreparedStatement statement2 = connect.prepareStatement(updateUrlClassTagWebSiteTable + ";");
+                PreparedStatement statement2 = connect.prepareStatement(WebsiteTableQueries.UPDATE_TARGET_CLASS_BY_LINK.toString());
                 statement2.setString(1, newsWebPageModel.getTargetClass());
                 statement2.setString(2, newsWebPageModel.getLink());
                 statement2.execute();
@@ -108,7 +86,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
         ArrayList<NewsWebPageModel> urls = null;
         try
         {
-            PreparedStatement preparedStatement = connect.prepareStatement(getAllWebSitesFromWebSiteTable + ";");
+            PreparedStatement preparedStatement = connect.prepareStatement(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             urls = new ArrayList<>();
@@ -135,7 +113,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
 
         try
         {
-            PreparedStatement preparedStatement = connect.prepareStatement(selectAllRss + ";");
+            PreparedStatement preparedStatement = connect.prepareStatement(RSSItemTableQueries.SELECT_ALL_RSS_ITEMS.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next())
@@ -166,7 +144,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
 
         try
         {
-            PreparedStatement preparedStatement = connect.prepareStatement( selectRssItemFromRssTableByWebPage + ";");
+            PreparedStatement preparedStatement = connect.prepareStatement( RSSItemTableQueries.SELECT_FROM_RSSITEM_BY_NEWSPAGE_LINK.toString());
             preparedStatement.setString(1, webPageLink);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -203,7 +181,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
             NewsWebPageModel newsWebPageModel = null;
             try
             {
-                PreparedStatement selectWebsite = connect.prepareStatement(selectWebSitesFromWebSiteTable + ";");
+                PreparedStatement selectWebsite = connect.prepareStatement(WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString() );
                 selectWebsite.setString(1, websiteLink);
                 ResultSet resultSet = selectWebsite.executeQuery();
                 resultSet.first();
@@ -227,14 +205,14 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
     {
         try
         {
-            PreparedStatement selectRSS = connect.prepareStatement(selectRssByLink + ";");
+            PreparedStatement selectRSS = connect.prepareStatement( RSSItemTableQueries.SELECT_FROM_RSSITEM_BY_ARTICLE_LINK.toString());
 
             selectRSS.setString(1, rssItemModel.getLink());
             ResultSet resultSet = selectRSS.executeQuery();
             resultSet.beforeFirst();
             if (!resultSet.next())
             {
-                PreparedStatement addRSS = connect.prepareStatement(addRSSItemToRSSItemsTable + ";");
+                PreparedStatement addRSS = connect.prepareStatement(RSSItemTableQueries.INSERT_INTO_RSSITEM_TABLE.toString());
 
                 addRSS.setString(1, rssItemModel.getTitle());
                 addRSS.setString(2, rssItemModel.getDescription());
@@ -258,7 +236,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
 
         try
         {
-            PreparedStatement preparedStatement = connect.prepareStatement(selectRssByLink + ";");
+            PreparedStatement preparedStatement = connect.prepareStatement(RSSItemTableQueries.SELECT_FROM_RSSITEM_BY_ARTICLE_LINK.toString());
             preparedStatement.setString(1, link);
 
             ResultSet resultSet = preparedStatement.executeQuery();
