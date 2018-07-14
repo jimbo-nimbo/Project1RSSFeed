@@ -14,8 +14,8 @@ public class DataBaseServiceTest
 
     @Test
     public void addWebSiteTest(){
-        DataBaseService.getInstance().addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", DataBaseService.getInstance()));
-        DataBaseService.getInstance().addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" , "item-body", DataBaseService.getInstance()));
+        DataBaseService.getInstance().addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", "",DataBaseService.getInstance()));
+        DataBaseService.getInstance().addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" , "item-body", "", DataBaseService.getInstance()));
     }
 
     @Test

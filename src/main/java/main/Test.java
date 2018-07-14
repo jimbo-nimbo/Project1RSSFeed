@@ -9,18 +9,21 @@ public class Test
         rssService = new RSSService();
 
         //add some websites to database
-        rssService.addWebSite("http://www.irinn.ir/fa/rss/allnews","body");
-        rssService.addWebSite("http://www.varzesh3.com/rss/all","news-page--news-text");
-        rssService.addWebSite("http://www.irna.ir/en/rss.aspx?kind=-1&area=0","bodytext");
-        rssService.addWebSite("http://www.tabnak.ir/fa/rss/allnews","item-text");
-        rssService.addWebSite("https://www.yjc.ir/fa/rss/allnews","body");
+        rssService.addWebSite("http://www.irinn.ir/fa/rss/allnews",
+                "body","dd MMM yyyy HH:mm:ss zzz");
+        rssService.addWebSite("http://www.irna.ir/en/rss.aspx?kind=-1&area=0","bodytext",
+                "EEE, dd MMM yyyy HH:mm");
+        rssService.addWebSite("http://www.tabnak.ir/fa/rss/allnews","item-text",
+                "dd MMM yyyy HH:mm:ss zzz");
+        rssService.addWebSite("https://www.yjc.ir/fa/rss/allnews","body",
+                "dd MMM yyyy HH:mm:ss zzz");
+        rssService.addWebSite("https://www.isna.ir/rss", "item-text",
+                "E, dd MMM yyyy HH:mm:ss zzz");
 
-        System.out.println(rssService.getWebSites());
+        rssService.updateDatabaseForWebsite("https://www.isna.ir/rss");
 
-        rssService.updateDatabaseForWebsite("http://www.varzesh3.com/rss/all");
-//        System.out.println(rssService.getWebSiteRssData("http://www.varzesh3.com/rss/all"));
+        System.out.println("hello");
 
         rssService.updateDataBase();
-//        System.out.println(rssService.getAllRssData());
     }
 }

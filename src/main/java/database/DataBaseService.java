@@ -65,12 +65,14 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
                 PreparedStatement statement1 = connect.prepareStatement(WebsiteTableQueries.INSERT_INTO_TABLE.toString());
                 statement1.setString(1, newsWebPageModel.getLink());
                 statement1.setString(2, newsWebPageModel.getTargetClass());
+                statement1.setString(3, newsWebPageModel.getDatePattern());
                 statement1.execute();
             } else
             {
                 PreparedStatement statement2 = connect.prepareStatement(WebsiteTableQueries.UPDATE_TARGET_CLASS_BY_LINK.toString());
                 statement2.setString(1, newsWebPageModel.getTargetClass());
-                statement2.setString(2, newsWebPageModel.getLink());
+                statement2.setString(2, newsWebPageModel.getDatePattern());
+                statement2.setString(3, newsWebPageModel.getLink());
                 statement2.execute();
             }
 
@@ -86,7 +88,8 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
         ArrayList<NewsWebPageModel> urls = null;
         try
         {
-            PreparedStatement preparedStatement = connect.prepareStatement(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
+            PreparedStatement preparedStatement =
+                    connect.prepareStatement(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             urls = new ArrayList<>();
@@ -95,7 +98,8 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
             while (resultSet.next())
             {
                 urls.add(new NewsWebPageModel(resultSet.getString("url"),
-                        resultSet.getString("class"), this));
+                        resultSet.getString("class"),resultSet.getString("datePattern"),
+                        this));
             }
 
         } catch (SQLException e)
@@ -188,6 +192,7 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
                 newsWebPageModel = new NewsWebPageModel(
                                 resultSet.getString("url"),
                                 resultSet.getString("class"),
+                                resultSet.getString("datePattern"),
                                 this);
                 webPageInformationHashMap.put(websiteLink, newsWebPageModel);
 
@@ -214,10 +219,12 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
             {
                 PreparedStatement addRSS = connect.prepareStatement(RSSItemTableQueries.INSERT_INTO_RSSITEM_TABLE.toString());
 
+                java.sql.Date date = new java.sql.Date(rssItemModel.getDate().getTime());
+
                 addRSS.setString(1, rssItemModel.getTitle());
                 addRSS.setString(2, rssItemModel.getDescription());
                 addRSS.setString(3, rssItemModel.getLink());
-                addRSS.setString(4, rssItemModel.getPubDate());
+                addRSS.setDate(4, date);
                 addRSS.setString(5, rssItemModel.getArticle());
                 addRSS.setString(6, rssItemModel.getNewsWebPage());
 

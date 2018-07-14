@@ -25,9 +25,9 @@ public class RSSService
         webSiteRepository.addWebSite(newsWebPageModel);
     }
 
-    public void addWebSite(String websiteLink, String targetClass)
+    public void addWebSite(String websiteLink, String targetClass, String datePattern)
     {
-        webSiteRepository.addWebSite(new NewsWebPageModel(websiteLink,targetClass,rssItemRepository));
+        webSiteRepository.addWebSite(new NewsWebPageModel(websiteLink, targetClass, datePattern, rssItemRepository));
     }
 
     public List<NewsWebPageModel> getWebSites()
@@ -37,7 +37,12 @@ public class RSSService
 
     public void updateDataBase()
     {
-        webSiteRepository.getWebsites().forEach(NewsWebPageModel::update);
+//        webSiteRepository.getWebsites().forEach(NewsWebPageModel::update);
+        webSiteRepository.getWebsites().forEach(e ->
+        {
+            System.out.println(e.getLink());
+            e.update();
+        });
     }
 
     public void updateDatabaseForWebsite(String webSiteLink)

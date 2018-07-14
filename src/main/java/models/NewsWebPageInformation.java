@@ -4,4 +4,5 @@ public interface NewsWebPageInformation
 {
     String getTargetClass();
     String getLink();
+    String getDatePattern();
 }

@@ -7,7 +7,7 @@ public enum RSSItemTableQueries
                     "(title mediumtext," +
                     " description mediumtext," +
                     " link varchar(300) PRIMARY KEY ," +
-                    " pubDate mediumtext," +
+                    " pubDate Date," +
                     " article longtext," +
                     " newsWebPage varchar(300)," +
                     " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url)) " +

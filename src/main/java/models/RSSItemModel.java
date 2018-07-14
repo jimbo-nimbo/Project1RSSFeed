@@ -5,6 +5,9 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RSSItemModel
 {
@@ -14,6 +17,8 @@ public class RSSItemModel
     private String article;
     private String pubDate;
     private String newsWebPage;
+
+    private Date date;
 
     private NewsWebPageInformation newsWebPageInformation;
 
@@ -27,8 +32,19 @@ public class RSSItemModel
         this.pubDate = pubDate;
         this.newsWebPageInformation = newsWebPageInformation;
         newsWebPage = newsWebPageInformation.getLink();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageInformation.getDatePattern());
+
+        try
+        {
+            date = simpleDateFormat.parse(pubDate);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
     }
 
+    //constructor for creation RSSItem from newsWebPage
     public RSSItemModel(String title, String description, String link,
                         String pubDate, NewsWebPageInformation newsWebPageInformation)
     {
@@ -38,6 +54,16 @@ public class RSSItemModel
         this.pubDate = pubDate;
         this.newsWebPageInformation = newsWebPageInformation;
         newsWebPage = newsWebPageInformation.getLink();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageInformation.getDatePattern());
+
+        try
+        {
+            date = simpleDateFormat.parse(pubDate);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
 
         fetch();
     }
@@ -86,6 +112,11 @@ public class RSSItemModel
 
     public String getPubDate() {
         return pubDate;
+    }
+
+    public Date getDate()
+    {
+        return date;
     }
 
     public void setPubDate(String pubDate) {

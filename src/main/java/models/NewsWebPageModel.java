@@ -12,26 +12,36 @@ public class NewsWebPageModel implements NewsWebPageInformation
 {
     private String link;
     private String targetClass;
+    private String datePattern;
     private String title;
     private String description;
 
     private RSSItemRepository rssItemRepository;
 
-    public NewsWebPageModel(String link, String targetClass, RSSItemRepository rssItemRepository)
+    public NewsWebPageModel(String link, String targetClass, String dataPattern, RSSItemRepository rssItemRepository)
     {
         this.link = link;
         this.targetClass = targetClass;
         this.rssItemRepository = rssItemRepository;
+        this.datePattern = dataPattern;
 
         fetch();
+    }
+
+    @Override
+    public String getDatePattern()
+    {
+        return datePattern;
     }
 
     public void fetch()
     {
          try {
             Document document = Jsoup.connect(link).get();
-            title = document.select("title").first().text();
-            description = document.select("description").first().text();
+            title = document.select("title").first() == null ?
+            null : document.select("title").first().text();
+            description = document.select("description").first() == null?
+            null : document.select("description").first().text();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,13 +52,21 @@ public class NewsWebPageModel implements NewsWebPageInformation
         try {
             Document document = Jsoup.connect(link).get();
 
+            Element title;
+            Element description;
+            Element link;
+            Element pubDate;
             for (Element element: document.select("item"))
             {
+                title = document.select("title").first();
+                description = document.select("description").first();
+                link = document.select("link").first();
+                pubDate = document.select("pubDate").first();
                 rssItemRepository.addRSSItem(new RSSItemModel(
-                        element.select("title").first().text(),
-                        element.select("description").first().text(),
-                        element.select("link").first().text(),
-                        element.select("pubDate").first().text(),
+                        title == null ? null : title.text(),
+                        description == null ? null : description.text(),
+                        link == null ? null : link.text(),
+                        pubDate == null ? null : pubDate.text(),
                         this));
             }
         } catch (IOException e) {
