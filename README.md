@@ -1,5 +1,6 @@
 #nimbo2  Project1RSSFeed
 #by jimbo
+
 this project goal is to get website url from user and manage new feeds and news of 
 those sites and take the main text of news out of the site
 
@@ -23,8 +24,10 @@ functions of our service:
     
 to run the project :
 
-1- initialize config.properties file 
+1- initialize config.properties file
+ 
 2- create database with name you specified and grant all privileges to DB_USERNAME
+
 3- create instance from RSSService class and call this functions (or run Test class main function to check simple functionality)   
     
 

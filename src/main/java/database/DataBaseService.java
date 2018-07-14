@@ -8,11 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DataBaseService implements WebSiteRepository, RSSItemRepository
+public class DataBaseService implements WebSiteRepository, RSSItemRepository, SearchEngineRepository
 {
-
-    private static final String dataBaseConfig = "useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
-
     private Connection connect;
 
     HashMap<String, NewsWebPageModel> webPageInformationHashMap;
@@ -29,14 +26,14 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
 
     private DataBaseService()
     {
-        ConfigModel configModel = new ConfigModel("src/main/resources/config.properties");
+        ConfigModel configModel = new ConfigModel(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
         webPageInformationHashMap = new HashMap<>();
         try
         {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://" + configModel.getHostIP() + ":" +
+            Class.forName(DataBaseCreationQueries.DATABASE_DRIVER_NAME.toString());
+            connect = DriverManager.getConnection(DataBaseCreationQueries.DATABASE_TYPE.toString() + configModel.getHostIP() + ":" +
                     configModel.getHostPort() +
-                    "?" + dataBaseConfig, configModel.getUsername(), configModel.getPassword());
+                    "?" + DataBaseCreationQueries.DATABASE_CONFIG.toString(), configModel.getUsername(), configModel.getPassword());
 
             Statement statement = connect.createStatement();
             statement.execute( DataBaseCreationQueries.CREATE_DATABASE_IF_NOT_EXISTS.toString() + configModel.getDbName() + ";");
@@ -250,5 +247,37 @@ public class DataBaseService implements WebSiteRepository, RSSItemRepository
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ResultSet runQuery(String query, String... param) {
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement statement = connect.prepareStatement(query);
+            int paramIndex = 1;
+            for(String parameter : param) {
+                statement.setString(paramIndex, parameter);
+                paramIndex++;
+            }
+            resultSet = statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+    @Override
+    public void runExecute(String query, String... param) {
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement statement = connect.prepareStatement(query);
+            int paramIndex = 1;
+            for(String parameter : param) {
+                statement.setString(paramIndex, parameter);
+                paramIndex++;
+            }
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
