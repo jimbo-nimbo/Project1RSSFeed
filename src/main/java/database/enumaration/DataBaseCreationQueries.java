@@ -1,4 +1,4 @@
-package database;
+package database.enumaration;
 
 public enum DataBaseCreationQueries
 {

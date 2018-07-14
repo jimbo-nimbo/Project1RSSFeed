@@ -1,11 +1,11 @@
-package database;
+package database.model;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ConfigModel
+public class Config
 {
     private String hostIP;
     private String hostPort;
@@ -13,7 +13,7 @@ public class ConfigModel
     private String username;
     private String password;
 
-    ConfigModel(String url)
+    public Config(String url)
     {
         Properties prop = new Properties();
         InputStream input = null;
@@ -47,62 +47,29 @@ public class ConfigModel
 
     }
 
-    public ConfigModel(String hostIP, String hostPort, String dbName, String username, String password)
-    {
-        this.hostIP = hostIP;
-        this.hostPort = hostPort;
-        this.dbName = dbName;
-        this.username = username;
-        this.password = password;
-    }
-
-     String getHostIP()
+     public String getHostIP()
     {
         return hostIP;
     }
 
-     String getHostPort()
+     public String getHostPort()
     {
         return hostPort;
     }
 
-     String getDbName()
+     public String getDbName()
     {
         return dbName;
     }
 
-     String getUsername()
+     public String getUsername()
     {
         return username;
     }
 
-     String getPassword()
+     public String getPassword()
     {
         return password;
     }
 
-    public void setHostIP(String hostIP)
-    {
-        this.hostIP = hostIP;
-    }
-
-    public void setHostPort(String hostPort)
-    {
-        this.hostPort = hostPort;
-    }
-
-    public void setDbName(String dbName)
-    {
-        this.dbName = dbName;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
 }

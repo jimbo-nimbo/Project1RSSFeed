@@ -1,4 +1,4 @@
-package searchEngine;
+package searchEngine.enumarations;
 
 public enum SearchSqlQuery {
     SEARCH_FOR_TITLE_IN_RSSITEM(

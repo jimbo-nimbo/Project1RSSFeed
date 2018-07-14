@@ -1,32 +1,28 @@
 package searchEngine.implementions;
 
-import database.DataBaseService;
-import database.SearchEngineRepository;
-import models.SearchResult;
+import database.implementation.DataBase;
+import searchEngine.interfaces.SearchEngineRepository;
+import searchEngine.model.SearchResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import searchEngine.SearchSqlQuery;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.*;
-
-public class SearchEngineImplementionTest {
-    SearchEngineImplemention searchEngineImplemention;
-    SearchEngineRepository searchEngineRepository;
+public class SearchEngineImplemantationTest
+{
+    private SearchEngineImplemantation searchEngineImplemention;
+    private SearchEngineRepository searchEngineRepository;
     @Before
     public void setup(){
-        searchEngineImplemention = new SearchEngineImplemention(DataBaseService.getInstance());
-        searchEngineRepository = DataBaseService.getInstance();
+        searchEngineImplemention = new SearchEngineImplemantation(DataBase.getInstance());
+        searchEngineRepository = DataBase.getInstance();
         injectDate();
     }
 
     @After
     public void clean(){
-        searchEngineRepository.runExecute(SearchQuery.DELETE_DATA_FROM_RSS_ITEM.toString(), "testLink");
+        searchEngineRepository.execute(SearchQuery.DELETE_DATA_FROM_RSS_ITEM.toString(), "testLink");
     }
 
     @Test
@@ -37,7 +33,7 @@ public class SearchEngineImplementionTest {
         String article = "helloTestblahblah";
         String pubDate = "null";
         String newsWebPage = "http://www.irinn.ir/fa/rss/allnews";
-        searchEngineRepository.runExecute(SearchQuery.INJECT_DATA_TO_RSS_ITEM.toString(), title, description, link, pubDate, article, newsWebPage);
+        searchEngineRepository.execute(SearchQuery.INJECT_DATA_TO_RSS_ITEM.toString(), title, description, link, pubDate, article, newsWebPage);
 
     }
 

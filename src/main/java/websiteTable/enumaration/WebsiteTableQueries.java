@@ -1,4 +1,4 @@
-package database;
+package websiteTable.enumaration;
 
 public enum WebsiteTableQueries
 {

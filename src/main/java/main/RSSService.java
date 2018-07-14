@@ -1,10 +1,10 @@
 package main;
 
-import database.DataBaseService;
-import database.RSSItemRepository;
-import database.WebSiteRepository;
-import models.NewsWebPageModel;
-import models.RSSItemModel;
+import database.implementation.DataBase;
+import RSSTable.interfaces.RSSItemRepository;
+import websiteTable.interfaces.WebSiteRepository;
+import websiteTable.model.NewsWebPageModel;
+import RSSTable.model.RSSItemModel;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ public class RSSService
 
     public RSSService()
     {
-        DataBaseService dataBaseService= DataBaseService.getInstance();
-        webSiteRepository = dataBaseService;
-        rssItemRepository = dataBaseService;
+        DataBase dataBase = DataBase.getInstance();
+        webSiteRepository = dataBase;
+        rssItemRepository = dataBase;
     }
 
     public void addWebSite(NewsWebPageModel newsWebPageModel)

@@ -1,10 +1,13 @@
-package models;
+package RSSTable.model;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import websiteTable.model.NewsWebPageInformation;
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,60 +18,73 @@ public class RSSItemModel
     private String description;
     private String link;
     private String article;
-    private String pubDate;
+    private String dateString;
     private String newsWebPage;
 
     private Date date;
 
     private NewsWebPageInformation newsWebPageInformation;
 
-    //constructor for getting data from database
-    public RSSItemModel(String title, String description, String link, String article, String pubDate, NewsWebPageInformation newsWebPageInformation)
+    /**
+     * constructor for getting model from database
+     * @param resultSet
+     * @param newsWebPageInformation
+     */
+    public RSSItemModel(ResultSet resultSet, NewsWebPageInformation newsWebPageInformation)
     {
-        this.title = title;
-        this.description = description;
-        this.link = link;
-        this.article = article;
-        this.pubDate = pubDate;
         this.newsWebPageInformation = newsWebPageInformation;
         newsWebPage = newsWebPageInformation.getLink();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageInformation.getDatePattern());
-
         try
         {
-            date = simpleDateFormat.parse(pubDate);
-        } catch (ParseException e)
+            title = resultSet.getString("title");
+            description = resultSet.getString("description");
+            link = resultSet.getString("link");
+            date = resultSet.getDate("dateString");
+            article = resultSet.getString("article");
+        } catch (SQLException e)
         {
             e.printStackTrace();
         }
+
+        parseDate();
     }
 
-    //constructor for creation RSSItem from newsWebPage
+    /**
+     * constructor for fetching data for first time
+     * @param title
+     * @param description
+     * @param link
+     * @param dateString
+     * @param newsWebPageInformation
+     */
     public RSSItemModel(String title, String description, String link,
-                        String pubDate, NewsWebPageInformation newsWebPageInformation)
+                        String dateString, NewsWebPageInformation newsWebPageInformation)
     {
         this.title = title;
         this.description = description;
         this.link = link;
-        this.pubDate = pubDate;
+        this.dateString = dateString;
         this.newsWebPageInformation = newsWebPageInformation;
         newsWebPage = newsWebPageInformation.getLink();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageInformation.getDatePattern());
-
-        try
-        {
-            date = simpleDateFormat.parse(pubDate);
-        } catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-
+        parseDate();
         fetch();
     }
 
-    public void fetch()
+    private void parseDate()
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageInformation.getDatePattern());
+        try
+        {
+            date = simpleDateFormat.parse(dateString);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetch()
     {
         //for non-ASCII URLs
         String asciiLink = URI.create(link).toASCIIString();
@@ -110,8 +126,8 @@ public class RSSItemModel
         this.link = link;
     }
 
-    public String getPubDate() {
-        return pubDate;
+    public String getDateString() {
+        return dateString;
     }
 
     public Date getDate()
@@ -119,8 +135,8 @@ public class RSSItemModel
         return date;
     }
 
-    public void setPubDate(String pubDate) {
-        this.pubDate = pubDate;
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
     }
 
     public String getNewsWebPage()
@@ -136,7 +152,7 @@ public class RSSItemModel
                 ", description='" + description + '\'' +
                 ", link='" + link + '\'' +
                 ", article='" + article + '\'' +
-                ", pubDate='" + pubDate + '\'' +
+                ", dateString='" + dateString + '\'' +
                 ", newsWebPageInformation=" + newsWebPageInformation +
                 '}';
     }

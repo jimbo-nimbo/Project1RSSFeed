@@ -1,11 +1,14 @@
-package models;
+package websiteTable.model;
 
-import database.RSSItemRepository;
+import RSSTable.interfaces.RSSItemRepository;
+import RSSTable.model.RSSItemModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class NewsWebPageModel implements NewsWebPageInformation
@@ -18,6 +21,21 @@ public class NewsWebPageModel implements NewsWebPageInformation
 
     private RSSItemRepository rssItemRepository;
 
+    public NewsWebPageModel(ResultSet resultSet, RSSItemRepository rssItemRepository)
+    {
+        this.rssItemRepository = rssItemRepository;
+        try
+        {
+            link = resultSet.getString("url");
+            targetClass = resultSet.getString("class");
+            datePattern = resultSet.getString("datePattern");
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        fetchTitleAndDescription();
+    }
+
     public NewsWebPageModel(String link, String targetClass, String dataPattern, RSSItemRepository rssItemRepository)
     {
         this.link = link;
@@ -25,7 +43,7 @@ public class NewsWebPageModel implements NewsWebPageInformation
         this.rssItemRepository = rssItemRepository;
         this.datePattern = dataPattern;
 
-        fetch();
+        fetchTitleAndDescription();
     }
 
     @Override
@@ -34,7 +52,7 @@ public class NewsWebPageModel implements NewsWebPageInformation
         return datePattern;
     }
 
-    public void fetch()
+    private void fetchTitleAndDescription()
     {
          try {
             Document document = Jsoup.connect(link).get();

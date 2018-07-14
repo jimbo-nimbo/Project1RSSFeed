@@ -1,4 +1,4 @@
-package models;
+package searchEngine.model;
 
 public class SearchResult {
     private String title;

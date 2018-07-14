@@ -1,4 +1,4 @@
-package database;
+package RSSTable.enumaration;
 
 public enum RSSItemTableQueries
 {
@@ -12,7 +12,7 @@ public enum RSSItemTableQueries
                     " newsWebPage varchar(300)," +
                     " FOREIGN KEY (newsWebPage) REFERENCES WebSite(url)) " +
                     "CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;" ),
-    INSERT_INTO_RSSITEM_TABLE(
+    INSERT_INTO_RSS_ITEM_TABLE(
             "INSERT  INTO RssItem " +
                     "(title, description, link, pubDate, article, newsWebPage) VALUES " +
                     "(?, ?, ?, ?, ?, (SELECT (url) FROM WebSite WHERE url LIKE ?));"
@@ -20,13 +20,12 @@ public enum RSSItemTableQueries
     SELECT_FROM_RSSITEM_BY_NEWSPAGE_LINK(
             "SELECT * FROM RssItem WHERE newsWebPage LIKE ?;"
     ),
-    SELECT_FROM_RSSITEM_BY_ARTICLE_LINK(
+    SELECT_RSS_ITEM_BY_LINK(
             "SELECT * FROM RssItem WHERE link LIKE ?;"
     ),
     SELECT_ALL_RSS_ITEMS(
             "SELECT * FROM RssItem;"
-    )
-    ;
+    );
 
     private String query;
 

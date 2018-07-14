@@ -1,7 +1,7 @@
-package database;
+package websiteTable.interfaces;
 
-import models.NewsWebPageModel;
-import models.RSSItemModel;
+import RSSTable.model.RSSItemModel;
+import websiteTable.model.NewsWebPageModel;
 
 import java.util.List;
 
