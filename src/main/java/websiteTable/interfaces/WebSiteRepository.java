@@ -9,7 +9,5 @@ public interface WebSiteRepository
 {
     void addWebSite(NewsWebPageModel newsWebPageModel);
     List<NewsWebPageModel> getWebsites();
-    List<RSSItemModel> getAllRSSData();
-    List<RSSItemModel> getRSSDataFromWebSite(String webPageLink);
     NewsWebPageModel getWebsite(String websiteLink);
 }

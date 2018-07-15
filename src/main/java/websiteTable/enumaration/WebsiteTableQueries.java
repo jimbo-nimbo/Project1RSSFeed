@@ -1,7 +1,6 @@
 package websiteTable.enumaration;
 
-public enum WebsiteTableQueries
-{
+public enum WebsiteTableQueries {
     CREATE_WEBSITE_TABLE_IF_NOT_EXISTS(
             "CREATE TABLE IF NOT EXISTS WebSite" +
                     "(url varchar (300) PRIMARY KEY ," +
@@ -20,18 +19,19 @@ public enum WebsiteTableQueries
     ),
     SELECT_ALL_WEBSITES(
             "SELECT * FROM WebSite;"
+    ),
+    DROP_WEB_SITE_TABLE(
+            "DROP TABLE WebSite;"
     );
 
     private String query;
 
-    WebsiteTableQueries(String query)
-    {
+    WebsiteTableQueries(String query) {
         this.query = query;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return query;
     }
 }

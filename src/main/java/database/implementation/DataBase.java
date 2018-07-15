@@ -50,7 +50,6 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     {
         webPageInformationHashMap = new HashMap<>();
         rssItemModelHashMap = new HashMap<>();
-
         DataBaseConfig configModel = new DataBaseConfig(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
         try
         {
@@ -182,9 +181,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     {
         if (rssItemModelHashMap.containsKey(rssItemModel.getLink()))
             return;
-
         rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
-
         try
         {
             ResultSet resultSet = executeQuery(RSSItemTableQueries.SELECT_RSS_ITEM_BY_LINK.toString(),
@@ -201,14 +198,12 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
                 addRSS.setDate(4, date);
                 addRSS.setString(5, rssItemModel.getArticle());
                 addRSS.setString(6, rssItemModel.getNewsWebPage());
-
                 addRSS.execute();
             }
         } catch (SQLException e)
         {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -245,7 +240,6 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     public List<RSSItemModel> getRSSDataFromWebSite(String webPageLink)
     {
         ArrayList<RSSItemModel> ans = new ArrayList<>();
-
         try
         {
             ResultSet resultSet = executeQuery(RSSItemTableQueries.SELECT_FROM_RSSITEM_BY_NEWSPAGE_LINK.toString(),
@@ -318,33 +312,23 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     {
         List<RSSItemModel> ans = new ArrayList<>();
         ResultSet resultSet =  executeQuery(DateQueries.SELECT_TEN_LAST_RSS_ITEM_BY_WEBSITE.toString(), newsWebPage);
-        try
-        {
-            resultSet.beforeFirst();
-            while (resultSet.next())
-            {
-                if (rssItemModelHashMap.containsKey(resultSet.getString("link"))){
-                    ans.add(rssItemModelHashMap.get(resultSet.getString("link")));
-                } else {
-                    RSSItemModel rssItemModel = new RSSItemModel(resultSet, getWebsite(newsWebPage));
-                    rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
-                    ans.add(rssItemModel);
-                }
-            }
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return ans;
+        return takeRssItemFromResultSetWithHashCheck(resultSet, newsWebPage);
     }
 
     @Override
-    public List<RSSItemModel> getTodayNewsForWebsite(String newsWebPage, String today) {
+    public List<RSSItemModel> getNewsForWebsiteByDate(String newsWebPage, Date date) {
         List<RSSItemModel> ans = new ArrayList<>();
-        ResultSet resultSet =  executeQuery(DateQueries.SELECT_TODAY_NEWS_BY_WEBSITE.toString(), newsWebPage, today);
-        return convertResultSetToRssItem(resultSet, newsWebPage);
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement statement = conn.prepareStatement(DateQueries.SELECT_BY_DATE_NEWS_BY_WEBSITE.toString());
+            statement.setString(1, newsWebPage);
+            statement.setDate(2, date);
+            resultSet = statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return takeRssItemFromResultSetWithHashCheck(resultSet, newsWebPage);
     }
-
 
 
     @Override
@@ -367,7 +351,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
         ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_TITLE_OR_ARTICLE_IN_RSSITEM.toString(), context, context);
         return convertResultSetToSearchResult(resultSet);
     }
-    private List<RSSItemModel> convertResultSetToRssItem(ResultSet resultSet, String webPageLink) {
+    private List<RSSItemModel> takeRssItemFromResultSetWithHashCheck(ResultSet resultSet, String webPageLink) {
         List<RSSItemModel> ans = new ArrayList<>();
         try
         {

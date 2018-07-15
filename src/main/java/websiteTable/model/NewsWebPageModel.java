@@ -76,10 +76,10 @@ public class NewsWebPageModel implements NewsWebPageInformation
             Element pubDate;
             for (Element element: document.select("item"))
             {
-                title = document.select("title").first();
-                description = document.select("description").first();
-                link = document.select("link").first();
-                pubDate = document.select("pubDate").first();
+                title = element.select("title").first();
+                description = element.select("description").first();
+                link = element.select("link").first();
+                pubDate = element.select("pubDate").first();
                 rssItemRepository.addRSSItem(new RSSItemModel(
                         title == null ? null : title.text(),
                         description == null ? null : description.text(),

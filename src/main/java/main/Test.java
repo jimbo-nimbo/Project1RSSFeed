@@ -20,9 +20,9 @@ public class Test
         rssService.addWebSite("https://www.isna.ir/rss", "item-text",
                 "E, dd MMM yyyy HH:mm:ss zzz");
 
-        rssService.updateDatabaseForWebsite("https://www.isna.ir/rss");
+        //rssService.updateDatabaseForWebsite("https://www.isna.ir/rss");
 
-        System.out.println("hello");
+        //System.out.println("hello");
 
         rssService.updateDataBase();
     }

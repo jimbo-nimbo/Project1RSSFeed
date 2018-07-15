@@ -25,6 +25,9 @@ public enum RSSItemTableQueries
     ),
     SELECT_ALL_RSS_ITEMS(
             "SELECT * FROM RssItem;"
+    ),
+    DROP_RSS_ITEM(
+            "DROP TABLE RssItem;"
     );
 
     private String query;

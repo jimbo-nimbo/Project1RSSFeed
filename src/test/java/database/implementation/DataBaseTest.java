@@ -1,25 +1,40 @@
 package database.implementation;
 
+import RSSTable.enumaration.RSSItemTableQueries;
+import RSSTable.interfaces.RSSItemRepository;
 import RSSTable.model.RSSItemModel;
 import dateEngine.interfaces.DateQuery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import searchEngine.interfaces.SearchEngine;
+import websiteTable.enumaration.WebsiteTableQueries;
+import websiteTable.interfaces.WebSiteRepository;
 import websiteTable.model.NewsWebPageModel;
 
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
 public class DataBaseTest {
     DataBase dataBase = null;
+    RSSItemRepository rssItemRepository;
+    WebSiteRepository webSiteRepository;
+    SearchEngine searchEngine;
     @Before
     public void setUp() throws Exception {
         dataBase = DataBase.getInstance();
+        rssItemRepository = dataBase;
+        webSiteRepository = dataBase;
+        searchEngine = dataBase;
     }
 
     @After
     public void tearDown() throws Exception {
+
     }
 
     @Test
@@ -28,18 +43,43 @@ public class DataBaseTest {
 
     @Test
     public void executeQuery() {
+        ResultSet resultSet = dataBase.executeQuery("describe RssItem;");
+        try {
+            resultSet.first();
+            System.err.println(resultSet.getString(1));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void execute() {
+
     }
 
     @Test
     public void addWebSite() {
+        dataBase.execute(RSSItemTableQueries.DROP_RSS_ITEM.toString());
+        dataBase.execute(WebsiteTableQueries.DROP_WEB_SITE_TABLE.toString());
+        dataBase.execute(WebsiteTableQueries.CREATE_WEBSITE_TABLE_IF_NOT_EXISTS.toString());
+        dataBase.execute(RSSItemTableQueries.CREATE_RSSITEM_TABLE_IF_NOT_EXISTS.toString());
+        dataBase.addWebSite(new NewsWebPageModel("http://www.irinn.ir/fa/rss/allnews", "body",
+                "dd MMM yyyy HH:mm:ss zzz", rssItemRepository));
+        ResultSet resultSet = dataBase.executeQuery(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
+        try {
+            resultSet.beforeFirst();
+            while (resultSet.next()){
+                System.err.println("added this webpagemodel : " + resultSet.getString("url"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void getWebsite() {
+
     }
 
     @Test
@@ -52,6 +92,14 @@ public class DataBaseTest {
 
     @Test
     public void getAllRSSData() {
+        addWebSite();
+        NewsWebPageModel newsWebPageModel =
+                webSiteRepository.getWebsite("http://www.irinn.ir/fa/rss/allnews");
+        newsWebPageModel.update();
+        ArrayList<RSSItemModel> ans = (ArrayList<RSSItemModel>) rssItemRepository.getAllRSSData();
+        for(RSSItemModel rssItemModel : ans){
+            System.err.println(rssItemModel.getLink());
+        }
     }
 
     @Test
@@ -73,8 +121,11 @@ public class DataBaseTest {
     @Test
     public void getTodayNewsForWebsite() {
         DateQuery dateQuery = DataBase.getInstance();
-        ArrayList<RSSItemModel> ans = (ArrayList<RSSItemModel>) dateQuery.getTodayNewsForWebsite("http://www.irinn.ir/fa/rss/allnews", "2018-07-15");
-        System.err.println(ans.get(0));
+        Date today = new Date(System.currentTimeMillis());
+        ArrayList<RSSItemModel> ans = (ArrayList<RSSItemModel>) dateQuery.getNewsForWebsiteByDate("http://www.irinn.ir/fa/rss/allnews", today);
+        for(RSSItemModel rssItemModel : ans){
+            System.err.println("today news: " + rssItemModel.getTitle());
+        }
 
     }
 

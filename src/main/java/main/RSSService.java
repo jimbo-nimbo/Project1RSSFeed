@@ -2,6 +2,7 @@ package main;
 
 import database.implementation.DataBase;
 import RSSTable.interfaces.RSSItemRepository;
+import searchEngine.interfaces.SearchEngine;
 import websiteTable.interfaces.WebSiteRepository;
 import websiteTable.model.NewsWebPageModel;
 import RSSTable.model.RSSItemModel;
@@ -12,12 +13,14 @@ public class RSSService
 {
     private WebSiteRepository webSiteRepository;
     private RSSItemRepository rssItemRepository;
+    private SearchEngine searchEngine;
 
     public RSSService()
     {
         DataBase dataBase = DataBase.getInstance();
         webSiteRepository = dataBase;
         rssItemRepository = dataBase;
+        searchEngine = dataBase;
     }
 
     public void addWebSite(NewsWebPageModel newsWebPageModel)
@@ -51,12 +54,12 @@ public class RSSService
     }
 
     public List<RSSItemModel> getWebSiteRssData(String webPageLink) {
-        return webSiteRepository.getRSSDataFromWebSite(webPageLink);
+        return rssItemRepository.getRSSDataFromWebSite(webPageLink);
     }
 
     public List<RSSItemModel> getAllRssData()
     {
-        return webSiteRepository.getAllRSSData();
+        return rssItemRepository.getAllRSSData();
     }
 
     public String getArticle(String articleLink)
