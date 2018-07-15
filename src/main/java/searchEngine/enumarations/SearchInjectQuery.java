@@ -1,6 +1,6 @@
-package searchEngine.implementions;
+package searchEngine.enumarations;
 
-public enum SearchQuery {
+public enum SearchInjectQuery {
     INJECT_DATA_TO_RSS_ITEM(
             "INSERT  INTO RssItem " +
                     "(title, description, link, pubDate, article, newsWebPage) VALUES " +
@@ -11,7 +11,7 @@ public enum SearchQuery {
                     "WHERE link = ?;"
     );
     String query;
-    SearchQuery(String query){
+    SearchInjectQuery(String query){
         this.query = query;
     }
     @Override

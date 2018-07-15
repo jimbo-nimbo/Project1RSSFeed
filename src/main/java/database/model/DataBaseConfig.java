@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class Config
+public class DataBaseConfig
 {
     private String hostIP;
     private String hostPort;
@@ -13,7 +13,7 @@ public class Config
     private String username;
     private String password;
 
-    public Config(String url)
+    public DataBaseConfig(String url)
     {
         Properties prop = new Properties();
         InputStream input = null;

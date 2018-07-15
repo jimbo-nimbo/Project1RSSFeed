@@ -1,16 +1,16 @@
 package database;
 
-import database.model.Config;
+import database.model.DataBaseConfig;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ConfigTest
+public class DataBaseConfigTest
 {
     @Test
     public void test()
     {
-        Config configModel = new Config("src/main/resources/config.properties");
+        DataBaseConfig configModel = new DataBaseConfig("src/main/resources/config.properties");
 
         assertEquals("127.0.0.1", configModel.getHostIP());
         assertEquals("3306", configModel.getHostPort());

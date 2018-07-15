@@ -20,7 +20,6 @@ public class RSSItemModel
     private String article;
     private String dateString;
     private String newsWebPage;
-
     private Date date;
 
     private NewsWebPageInformation newsWebPageInformation;
@@ -40,14 +39,12 @@ public class RSSItemModel
             title = resultSet.getString("title");
             description = resultSet.getString("description");
             link = resultSet.getString("link");
-            date = resultSet.getDate("dateString");
+            date = resultSet.getDate("pubDate");
             article = resultSet.getString("article");
         } catch (SQLException e)
         {
             e.printStackTrace();
         }
-
-        parseDate();
     }
 
     /**

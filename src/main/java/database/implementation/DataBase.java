@@ -2,11 +2,13 @@ package database.implementation;
 
 import RSSTable.interfaces.RSSItemRepository;
 import RSSTable.enumaration.RSSItemTableQueries;
-import database.model.Config;
 import database.enumaration.DataBaseCreationQueries;
+import database.model.DataBaseConfig;
 import dateEngine.enumaration.DateQueries;
 import dateEngine.interfaces.DateQuery;
-import searchEngine.interfaces.SearchEngineRepository;
+import searchEngine.enumarations.SearchSqlQuery;
+import searchEngine.interfaces.SearchEngine;
+import searchEngine.model.SearchResult;
 import websiteTable.model.NewsWebPageInformation;
 import websiteTable.model.NewsWebPageModel;
 import RSSTable.model.RSSItemModel;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEngineRepository, DateQuery
+public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery, SearchEngine
 {
     /**
      * Map for caching RSSItems and newsAgencies
@@ -49,7 +51,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEng
         webPageInformationHashMap = new HashMap<>();
         rssItemModelHashMap = new HashMap<>();
 
-        Config configModel = new Config(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
+        DataBaseConfig configModel = new DataBaseConfig(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
         try
         {
             Class.forName(DataBaseCreationQueries.DATABASE_DRIVER_NAME.toString());
@@ -75,7 +77,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEng
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < param.length; i++) {
-                statement.setString(i, param[i]);
+                statement.setString(i + 1, param[i]);
             }
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
@@ -89,7 +91,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEng
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < param.length; i++) {
-                statement.setString(i, param[i]);
+                statement.setString(i + 1, param[i]);
             }
             statement.execute();
         } catch (SQLException e) {
@@ -165,7 +167,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEng
             ans = new ArrayList<>();
             resultSet.beforeFirst();
             while (resultSet.next()) {
-                ans.add(getWebsite(resultSet.getString("link")));
+                ans.add(getWebsite(resultSet.getString("url")));
             }
 
         } catch (SQLException e)
@@ -259,7 +261,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEng
                 {
                     RSSItemModel rssItemModel = new RSSItemModel(resultSet, webPageModel);
                     ans.add(rssItemModel);
-                    rssItemModelHashMap.put(rssItemModel.getLink(),rssItemModel);
+                    rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
                 }
             }
         } catch (SQLException e)
@@ -336,4 +338,73 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, SearchEng
         return ans;
     }
 
+    @Override
+    public List<RSSItemModel> getTodayNewsForWebsite(String newsWebPage, String today) {
+        List<RSSItemModel> ans = new ArrayList<>();
+        ResultSet resultSet =  executeQuery(DateQueries.SELECT_TODAY_NEWS_BY_WEBSITE.toString(), newsWebPage, today);
+        return convertResultSetToRssItem(resultSet, newsWebPage);
+    }
+
+
+
+    @Override
+    public List<SearchResult> searchTitle(String context) {
+        context = "%" + context + "%";
+        ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_TITLE_IN_RSSITEM.toString(), context);
+        return convertResultSetToSearchResult(resultSet);
+    }
+
+    @Override
+    public List<SearchResult> searchArticle(String context) {
+        context = "%" + context + "%";
+        ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_ARTICLE_IN_RSSITEM.toString(), context);
+        return convertResultSetToSearchResult(resultSet);
+    }
+
+    @Override
+    public List<SearchResult> searchAll(String context) {
+        context = "%" + context + "%";
+        ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_TITLE_OR_ARTICLE_IN_RSSITEM.toString(), context, context);
+        return convertResultSetToSearchResult(resultSet);
+    }
+    private List<RSSItemModel> convertResultSetToRssItem(ResultSet resultSet, String webPageLink) {
+        List<RSSItemModel> ans = new ArrayList<>();
+        try
+        {
+            resultSet.beforeFirst();
+            while (resultSet.next())
+            {
+                if (rssItemModelHashMap.containsKey(resultSet.getString("link"))){
+                    ans.add(rssItemModelHashMap.get(resultSet.getString("link")));
+                } else {
+                    RSSItemModel rssItemModel = new RSSItemModel(resultSet, getWebsite(webPageLink));
+                    rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
+                    ans.add(rssItemModel);
+                }
+            }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ans;
+    }
+
+    private List<SearchResult> convertResultSetToSearchResult(ResultSet resultSet) {
+        ArrayList<SearchResult> ans = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+
+                ans.add(new SearchResult(
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getString("link"),
+                        resultSet.getString("article"),
+                        resultSet.getString("pubDate")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ans;
+    }
 }

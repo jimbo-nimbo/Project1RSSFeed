@@ -7,4 +7,5 @@ import java.util.List;
 public interface DateQuery
 {
     List<RSSItemModel> getTenLastNewsForWebsite(String newsWebPage);
+    List<RSSItemModel> getTodayNewsForWebsite(String newsWebPage, String today);
 }
