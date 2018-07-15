@@ -8,7 +8,6 @@ import dateEngine.enumaration.DateQueries;
 import dateEngine.interfaces.DateQuery;
 import searchEngine.enumarations.SearchSqlQuery;
 import searchEngine.interfaces.SearchEngine;
-import searchEngine.model.SearchResult;
 import websiteTable.model.NewsWebPageInformation;
 import websiteTable.model.NewsWebPageModel;
 import RSSTable.model.RSSItemModel;
@@ -36,8 +35,12 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     /**
      * singleton pattern for database
      */
+
+    private Object webSiteTableLock;
+    private Object rssItemTableLock;
+
     private static DataBase dataBase;
-    public static DataBase getInstance()
+    public static synchronized DataBase getInstance()
     {
         if (dataBase == null)
         {
@@ -50,6 +53,8 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     {
         webPageInformationHashMap = new HashMap<>();
         rssItemModelHashMap = new HashMap<>();
+        webSiteTableLock = new Object();
+        rssItemTableLock = new Object();
         DataBaseConfig configModel = new DataBaseConfig(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
         try
         {
@@ -98,32 +103,33 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
         }
     }
 
-
     @Override
     public void addWebSite(NewsWebPageModel newsWebPageModel)
     {
         try
         {
-            ResultSet resultSet = executeQuery(WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(),
-                    newsWebPageModel.getLink());
-
-            resultSet.beforeFirst();
-            if (!resultSet.next())
+            synchronized (webSiteTableLock)
             {
-                execute(WebsiteTableQueries.INSERT_INTO_TABLE.toString(),
-                        newsWebPageModel.getLink(),
-                        newsWebPageModel.getTargetClass(),
-                        newsWebPageModel.getDatePattern());
-            } else
-            {
-                execute(WebsiteTableQueries.UPDATE_TARGET_CLASS_BY_LINK.toString(),
-                        newsWebPageModel.getTargetClass(),
-                        newsWebPageModel.getDatePattern(),
+                ResultSet resultSet = executeQuery(WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(),
                         newsWebPageModel.getLink());
+
+                resultSet.beforeFirst();
+                if (!resultSet.next())
+                {
+                    execute(WebsiteTableQueries.INSERT_INTO_TABLE.toString(),
+                            newsWebPageModel.getLink(),
+                            newsWebPageModel.getTargetClass(),
+                            newsWebPageModel.getDatePattern());
+                } else
+                {
+                    execute(WebsiteTableQueries.UPDATE_TARGET_CLASS_BY_LINK.toString(),
+                            newsWebPageModel.getTargetClass(),
+                            newsWebPageModel.getDatePattern(),
+                            newsWebPageModel.getLink());
+                }
+
+                webPageInformationHashMap.put(newsWebPageModel.getLink(), newsWebPageModel);
             }
-
-            webPageInformationHashMap.put(newsWebPageModel.getLink(), newsWebPageModel);
-
         } catch (SQLException e)
         {
             e.printStackTrace();
@@ -312,7 +318,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
     {
         List<RSSItemModel> ans = new ArrayList<>();
         ResultSet resultSet =  executeQuery(DateQueries.SELECT_TEN_LAST_RSS_ITEM_BY_WEBSITE.toString(), newsWebPage);
-        return takeRssItemFromResultSetWithHashCheck(resultSet, newsWebPage);
+        return takeRssItemFromResultSetWithHashCheck(resultSet);
     }
 
     @Override
@@ -327,31 +333,32 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return takeRssItemFromResultSetWithHashCheck(resultSet, newsWebPage);
+        return takeRssItemFromResultSetWithHashCheck(resultSet);
     }
 
 
     @Override
-    public List<SearchResult> searchTitle(String context) {
+    public List<RSSItemModel> searchTitle(String context) {
         context = "%" + context + "%";
         ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_TITLE_IN_RSSITEM.toString(), context);
-        return convertResultSetToSearchResult(resultSet);
+        return takeRssItemFromResultSetWithHashCheck(resultSet);
     }
 
     @Override
-    public List<SearchResult> searchArticle(String context) {
+    public List<RSSItemModel> searchArticle(String context) {
         context = "%" + context + "%";
         ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_ARTICLE_IN_RSSITEM.toString(), context);
-        return convertResultSetToSearchResult(resultSet);
+        return takeRssItemFromResultSetWithHashCheck(resultSet);
     }
 
     @Override
-    public List<SearchResult> searchAll(String context) {
+    public List<RSSItemModel> searchAll(String context) {
         context = "%" + context + "%";
         ResultSet resultSet = executeQuery(SearchSqlQuery.SEARCH_FOR_TITLE_OR_ARTICLE_IN_RSSITEM.toString(), context, context);
-        return convertResultSetToSearchResult(resultSet);
+        return takeRssItemFromResultSetWithHashCheck(resultSet);
     }
-    private List<RSSItemModel> takeRssItemFromResultSetWithHashCheck(ResultSet resultSet, String webPageLink) {
+
+    private List<RSSItemModel> takeRssItemFromResultSetWithHashCheck(ResultSet resultSet) {
         List<RSSItemModel> ans = new ArrayList<>();
         try
         {
@@ -361,7 +368,8 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
                 if (rssItemModelHashMap.containsKey(resultSet.getString("link"))){
                     ans.add(rssItemModelHashMap.get(resultSet.getString("link")));
                 } else {
-                    RSSItemModel rssItemModel = new RSSItemModel(resultSet, getWebsite(webPageLink));
+                    RSSItemModel rssItemModel = new RSSItemModel(resultSet,
+                            getWebsite(resultSet.getString("newsWebPage")));
                     rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
                     ans.add(rssItemModel);
                 }
@@ -373,22 +381,4 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
         return ans;
     }
 
-    private List<SearchResult> convertResultSetToSearchResult(ResultSet resultSet) {
-        ArrayList<SearchResult> ans = new ArrayList<>();
-        try {
-            while (resultSet.next()) {
-
-                ans.add(new SearchResult(
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getString("link"),
-                        resultSet.getString("article"),
-                        resultSet.getString("pubDate")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ans;
-    }
 }

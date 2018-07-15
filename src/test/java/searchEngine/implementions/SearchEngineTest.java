@@ -1,14 +1,17 @@
 package searchEngine.implementions;
 
+import RSSTable.model.RSSItemModel;
 import database.implementation.DataBase;
 import searchEngine.enumarations.SearchInjectQuery;
 import searchEngine.interfaces.SearchEngine;
-import searchEngine.model.SearchResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
+
 
 public class SearchEngineTest
 {
@@ -29,40 +32,40 @@ public class SearchEngineTest
         String description = "describtion";
         String link = "testLink";
         String article = "helloTestblahblah";
-        String pubDate = "null";
+        Date pubDate = new Date(System.currentTimeMillis());
         String newsWebPage = "http://www.irinn.ir/fa/rss/allnews";
-        DataBase.getInstance().execute(SearchInjectQuery.INJECT_DATA_TO_RSS_ITEM.toString(), title, description, link, pubDate, article, newsWebPage);
+//        DataBase.getInstance().execute(SearchInjectQuery.INJECT_DATA_TO_RSS_ITEM.toString(), title, description, link, pubDate, article, newsWebPage);
 
     }
 
     @Test
     public void searchTitle() {
-        ArrayList<SearchResult> searchResult = (ArrayList<SearchResult>) searchEngine.searchTitle("bye");
+//        ArrayList<RSSItemModel> searchResult = (ArrayList<RSSItemModel>) searchEngine.searchTitle("bye");
+//        System.err.println(searchResult.get(0).getTitle());
+        ArrayList<RSSItemModel> searchResult = (ArrayList<RSSItemModel>) searchEngine.searchTitle("10");
         System.err.println(searchResult.get(0).getTitle());
-        searchResult = (ArrayList<SearchResult>) searchEngine.searchTitle("10");
-        System.err.println(searchResult.get(0).getTitle());
-        searchResult = (ArrayList<SearchResult>) searchEngine.searchTitle("کربوهیدرات");
+        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchTitle("برق");
         System.err.println(searchResult.get(0).getTitle());
     }
 
     @Test
     public void searchArticle() {
-        ArrayList<SearchResult> searchResult = (ArrayList<SearchResult>) searchEngine.searchArticle("hello");
+        ArrayList<RSSItemModel> searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("hello");
         System.err.println(searchResult.get(0).getTitle());
-        searchResult = (ArrayList<SearchResult>) searchEngine.searchArticle("24");
+        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("24");
         System.err.println(searchResult.get(0).getArticle());
-        searchResult = (ArrayList<SearchResult>) searchEngine.searchArticle("اسپورت");
+        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("اسپورت");
         System.err.println(searchResult.get(0).getArticle());
 
     }
 
     @Test
     public void searchAll() {
-        ArrayList<SearchResult> searchResult = (ArrayList<SearchResult>) searchEngine.searchAll("hello");
+        ArrayList<RSSItemModel> searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("hello");
         System.err.println(searchResult.get(0).getTitle());
-        searchResult = (ArrayList<SearchResult>) searchEngine.searchAll("24");
+        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("24");
         System.err.println(searchResult.get(0).getArticle());
-        searchResult = (ArrayList<SearchResult>) searchEngine.searchAll("اسپورت");
+        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("اسپورت");
         System.err.println(searchResult.get(0).getArticle());
     }
 

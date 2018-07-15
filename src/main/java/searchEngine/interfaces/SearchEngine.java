@@ -1,11 +1,11 @@
 package searchEngine.interfaces;
 
-import searchEngine.model.SearchResult;
+import RSSTable.model.RSSItemModel;
 
 import java.util.List;
 
 public interface SearchEngine {
-    List<SearchResult> searchTitle(String context);
-    List<SearchResult> searchArticle(String context);
-    List<SearchResult> searchAll(String context);
+    List<RSSItemModel> searchTitle(String context);
+    List<RSSItemModel> searchArticle(String context);
+    List<RSSItemModel> searchAll(String context);
 }

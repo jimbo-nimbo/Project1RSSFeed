@@ -40,7 +40,6 @@ public class RSSService
 
     public void updateDataBase()
     {
-//        webSiteRepository.getWebsites().forEach(NewsWebPageModel::update);
         webSiteRepository.getWebsites().forEach(e ->
         {
             System.out.println(e.getLink());
