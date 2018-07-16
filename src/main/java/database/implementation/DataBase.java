@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery, SearchEngine
 {
-    public DataBaseThreadManager dataBaseThreadManager;
+    private DataBaseThreadManager dataBaseThreadManager;
     /**
      * Map for caching RSSItems and newsAgencies
      */
@@ -52,7 +52,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
 
     private DataBase()
     {
-        dataBaseThreadManager = new DataBaseThreadManager();
+        dataBaseThreadManager = new DataBaseThreadManager(this);
         webPageInformationHashMap = new HashMap<>();
         rssItemModelHashMap = new HashMap<>();
         webSiteTableLock = new Object();

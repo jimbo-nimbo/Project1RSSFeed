@@ -83,7 +83,7 @@ public class NewsWebPageModel implements NewsWebPageInformation {
                                 this));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("website " + getLink() + " not updated!!!");
         }
     }
 
