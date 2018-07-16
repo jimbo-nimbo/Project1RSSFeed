@@ -43,6 +43,11 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>info.picocli</groupId>-->
+            <!--<artifactId>picocli</artifactId>-->
+            <!--<version>3.3.0</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     

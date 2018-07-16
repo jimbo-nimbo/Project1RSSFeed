@@ -1,6 +1,7 @@
 package dataAnalysis;
 
 import RSSTable.interfaces.RSSItemRepository;
+import asg.cliche.Command;
 import database.implementation.DataBase;
 import dateEngine.interfaces.DateQuery;
 import org.junit.Before;
@@ -32,6 +33,7 @@ public class DataAnalyserTest {
         searchEngine = dataBase;
         dataAnalyser = new DataAnalyser(rssItemRepository, webSiteRepository, searchEngine, dateQuery);
     }
+
     @Test
     public void getLastDayStatics() {
         HashMap<Date, Integer> myMap = (HashMap<Date, Integer>) dataAnalyser.getLastDayStatics("http://www.irinn.ir/fa/rss/allnews", 3);
