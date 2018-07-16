@@ -1,14 +1,10 @@
 package dataAnalysis;
 
-import rssRepository.interfaces.RSSItemRepository;
-import searchEngine.interfaces.SearchEngine;
-import webSiteRepository.interfaces.WebSiteRepository;
-
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataAnalyser implements AnalysisRepository {
+public class DataAnalyser{
 
   private RSSItemRepository rssItemRepository;
   private WebSiteRepository webSiteRepository;

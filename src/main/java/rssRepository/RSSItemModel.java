@@ -2,6 +2,7 @@ package rssRepository;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import webSiteRepository.NewsWebPageModel;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,17 +21,17 @@ public class RSSItemModel {
   private String newsWebPage;
   private Date date;
 
-  private NewsWebPageInformation newsWebPageInformation;
+  private NewsWebPageModel newsWebPageModel;
 
   /**
    * constructor for getting model from database
    *
    * @param resultSet
-   * @param newsWebPageInformation
+   * @param newsWebPageModel
    */
-  public RSSItemModel(ResultSet resultSet, NewsWebPageInformation newsWebPageInformation) {
-    this.newsWebPageInformation = newsWebPageInformation;
-    newsWebPage = newsWebPageInformation.getLink();
+  public RSSItemModel(ResultSet resultSet,  NewsWebPageModel newsWebPageModel) {
+    this.newsWebPageModel = newsWebPageModel;
+    newsWebPage = newsWebPageModel.getLink();
 
     try {
       title = resultSet.getString("title");
@@ -50,20 +51,20 @@ public class RSSItemModel {
    * @param description
    * @param link
    * @param dateString
-   * @param newsWebPageInformation
+   * @param newsWebPageModel
    */
   public RSSItemModel(
       String title,
       String description,
       String link,
       String dateString,
-      NewsWebPageInformation newsWebPageInformation) {
+      NewsWebPageModel newsWebPageModel) {
     this.title = title;
     this.description = description;
     this.link = link;
     this.dateString = dateString;
-    this.newsWebPageInformation = newsWebPageInformation;
-    newsWebPage = newsWebPageInformation.getLink();
+    this.newsWebPageModel = newsWebPageModel;
+    newsWebPage = newsWebPageModel.getLink();
 
     parseDate();
     fetch();
@@ -71,7 +72,7 @@ public class RSSItemModel {
 
   private void parseDate() {
     SimpleDateFormat simpleDateFormat =
-        new SimpleDateFormat(newsWebPageInformation.getDatePattern());
+        new SimpleDateFormat(newsWebPageModel.getDatePattern());
     try {
       date = simpleDateFormat.parse(dateString);
     } catch (ParseException e) {
@@ -84,7 +85,7 @@ public class RSSItemModel {
     String asciiLink = URI.create(link).toASCIIString();
     try {
       Document document = Jsoup.connect(asciiLink).get();
-      article = document.select("div." + newsWebPageInformation.getTargetClass()).text();
+      article = document.select("div." + newsWebPageModel.getTargetClass()).text();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -152,8 +153,8 @@ public class RSSItemModel {
         + ", dateString='"
         + dateString
         + '\''
-        + ", newsWebPageInformation="
-        + newsWebPageInformation
+        + ", newsWebPageModel="
+        + newsWebPageModel
         + '}';
   }
 }

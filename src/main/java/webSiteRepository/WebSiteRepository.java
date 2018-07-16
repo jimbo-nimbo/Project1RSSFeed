@@ -14,7 +14,7 @@ public class WebSiteRepository
 	private HashMap<String, NewsWebPageModel> webPageInformationHashMap = new HashMap<>();
 	private static Core core = Core.getInstance();
 
-	public static WebSiteRepository getInstance()
+	synchronized public static WebSiteRepository getInstance()
 	{
 		return ourInstance;
 	}
@@ -55,7 +55,7 @@ public class WebSiteRepository
 				ResultSet resultSet =
 						core.getDatabaseConnectionPool().executeQuery(WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(), websiteLink);
 				resultSet.first();
-				newsWebPageModel = new NewsWebPageModel(resultSet, this);
+				newsWebPageModel = new NewsWebPageModel(resultSet);
 				webPageInformationHashMap.put(websiteLink, newsWebPageModel);
 
 			} catch (SQLException e) {

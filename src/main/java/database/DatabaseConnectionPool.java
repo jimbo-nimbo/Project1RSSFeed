@@ -1,6 +1,7 @@
 package database;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import rssRepository.RSSItemModel;
 import rssRepository.RSSItemTableQueries;
 import webSiteRepository.WebsiteTableQueries;
 
@@ -9,17 +10,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnectionPool {
 	private static DatabaseConnectionPool databaseConnectionPool;
+	private ComboPooledDataSource comboPooledDataSource;
+	private DataBaseConfig dataBaseConfig;
+
 
 	public static synchronized DatabaseConnectionPool getInstance() {
 		if (databaseConnectionPool == null) databaseConnectionPool = new DatabaseConnectionPool();
 		return databaseConnectionPool;
 	}
-
-	private ComboPooledDataSource comboPooledDataSource;
-	private DataBaseConfig dataBaseConfig;
 
 	private DatabaseConnectionPool() {
 		dataBaseConfig = new DataBaseConfig(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
@@ -97,4 +100,5 @@ public class DatabaseConnectionPool {
 			e.printStackTrace();
 		}
 	}
+
 }
