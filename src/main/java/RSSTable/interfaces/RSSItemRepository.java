@@ -14,5 +14,4 @@ public interface RSSItemRepository {
   List<RSSItemModel> getAllRSSData();
 
   List<RSSItemModel> getRSSDataFromWebSite(String webPageLink);
-
 }

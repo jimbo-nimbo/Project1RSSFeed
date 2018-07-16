@@ -29,9 +29,9 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
   private Connection conn;
 
   /** singleton pattern for database */
-  private Object webSiteTableLock;
+  private final Object webSiteTableLock;
 
-  private Object rssItemTableLock;
+  private final Object rssItemTableLock;
 
   private static DataBase dataBase;
 
@@ -189,8 +189,7 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
         addRSS.setDate(4, date);
         addRSS.setString(5, rssItemModel.getArticle());
         addRSS.setString(6, rssItemModel.getNewsWebPage());
-        synchronized (rssItemTableLock)
-        {
+        synchronized (rssItemTableLock) {
           addRSS.execute();
         }
       }

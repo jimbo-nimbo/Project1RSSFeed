@@ -23,9 +23,9 @@ public class DataBaseThreadManager {
 
     private DataBaseThreadManager(DataBase dataBase) {
         this.dataBase = dataBase;
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.schedule(() -> updateDataBase(),
-        100, TimeUnit.SECONDS);
+        ScheduledExecutorService scheduledExecutorService =
+                Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.schedule(() -> updateDataBase(), 100, TimeUnit.SECONDS);
     }
 
     public void updateSite(NewsWebPageModel newsWebPageModel) {
@@ -33,11 +33,13 @@ public class DataBaseThreadManager {
         executor.execute(siteUpdate);
     }
 
-    public void addWebSite(String websiteLink, String targetClass, String datePattern) {
+    public void addWebSite(String websiteLink, String targetClass, String datePattern)
+            throws InterruptedException {
         Runnable addWebsite =
-                () ->
-                        dataBase.addWebSite(
-                                new NewsWebPageModel(websiteLink, targetClass, datePattern, dataBase));
+                () -> {
+                    dataBase.addWebSite(
+                            new NewsWebPageModel(websiteLink, targetClass, datePattern, dataBase));
+                };
         executor.execute(addWebsite);
     }
 
@@ -51,25 +53,26 @@ public class DataBaseThreadManager {
         List<Future<Boolean>> futures = new ArrayList<>();
         for (NewsWebPageModel newsWebPageModel : dataBase.getWebsites())
             futures.add(updateDatabaseForWebsite(newsWebPageModel.getLink()));
-        executor.submit(
-                () -> {
-                    for (Future future : futures) {
-                        try {
-                            future.get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    System.out.println("update completed!");
-                });
+    executor.submit(
+        () -> {
+          for (Future future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+              e.printStackTrace();
+            }
+          }
+          System.out.println("update completed!");
+        });
     }
 
     public Future<Boolean> updateDatabaseForWebsite(String webSiteLink) {
-        Callable<Boolean> callable =
-                () -> {
-                    dataBase.getWebsite(webSiteLink).update();
-                    return true;
-                };
+    Callable<Boolean> callable =
+        () -> {
+          System.out.println("updating " + webSiteLink + "....");
+          dataBase.getWebsite(webSiteLink).update();
+          return true;
+        };
 
         Future future = executor.submit(callable);
 
@@ -88,18 +91,18 @@ public class DataBaseThreadManager {
     }
 
     public Future<List<RSSItemModel>> getWebSiteRssData(String webPageLink) {
-        Callable<List<RSSItemModel> > callableList = new Callable<List<RSSItemModel>>() {
-            @Override
-            public List<RSSItemModel> call() throws Exception {
-                return dataBase.getRSSDataFromWebSite(webPageLink);
-            }
-        };
-        Future<List<RSSItemModel> > future = executor.submit(callableList);
+        Callable<List<RSSItemModel>> callableList =
+                () -> dataBase.getRSSDataFromWebSite(webPageLink);
+        Future<List<RSSItemModel>> future = executor.submit(callableList);
         return future;
     }
 
-    public Future<List<RSSItemModel>> getAllRssData()
+    public ExecutorService getExecutor()
     {
+        return executor;
+    }
+
+    public Future<List<RSSItemModel>> getAllRssData() {
         Callable<List<RSSItemModel>> callable = () -> dataBase.getAllRSSData();
         Future<List<RSSItemModel>> future = executor.submit(callable);
         return future;
