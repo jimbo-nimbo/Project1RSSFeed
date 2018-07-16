@@ -1,15 +1,14 @@
 package searchEngine.implementions;
 
-import RSSTable.model.RSSItemModel;
-import database.implementation.DataBase;
-import searchEngine.enumarations.SearchInjectQuery;
+import rssRepository.RSSItemModel;
+import database.DataBase;
+import SearchInjectQuery;
 import searchEngine.interfaces.SearchEngine;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 

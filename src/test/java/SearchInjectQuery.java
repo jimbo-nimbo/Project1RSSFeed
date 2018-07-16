@@ -1,5 +1,3 @@
-package searchEngine.enumarations;
-
 public enum SearchInjectQuery {
   INJECT_DATA_TO_RSS_ITEM(
       "INSERT  INTO RssItem "

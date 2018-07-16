@@ -2,8 +2,8 @@ package cli;
 
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
-import database.implementation.DataBaseThreadManager;
-import websiteTable.model.NewsWebPageModel;
+import database.DataBaseThreadManager;
+import webSiteRepository.NewsWebPageModel;
 
 import java.io.IOException;
 import java.util.List;

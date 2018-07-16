@@ -1,8 +1,7 @@
-package RSSTable.model;
+package rssRepository;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import websiteTable.model.NewsWebPageInformation;
 
 import java.io.IOException;
 import java.net.URI;

@@ -1,9 +1,8 @@
 package dataAnalysis;
 
-import RSSTable.interfaces.RSSItemRepository;
-import dateEngine.interfaces.DateQuery;
+import rssRepository.interfaces.RSSItemRepository;
 import searchEngine.interfaces.SearchEngine;
-import websiteTable.interfaces.WebSiteRepository;
+import webSiteRepository.interfaces.WebSiteRepository;
 
 import java.sql.Date;
 import java.util.HashMap;

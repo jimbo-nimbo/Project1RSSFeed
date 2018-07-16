@@ -1,6 +1,5 @@
 package database;
 
-import database.model.DataBaseConfig;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,4 +1,4 @@
-package dateEngine.enumaration;
+package dateEngine;
 
 public enum DateQueries {
   SELECT_TEN_LAST_RSS_ITEM_BY_WEBSITE(

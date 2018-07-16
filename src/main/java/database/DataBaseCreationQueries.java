@@ -1,4 +1,4 @@
-package database.enumaration;
+package database;
 
 public enum DataBaseCreationQueries {
   DATABASE_CONFIG_PATH("src/main/resources/config.properties"),

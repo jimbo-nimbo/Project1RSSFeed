@@ -1,23 +1,21 @@
 package database.implementation;
 
-import RSSTable.enumaration.RSSItemTableQueries;
-import RSSTable.interfaces.RSSItemRepository;
-import RSSTable.model.RSSItemModel;
-import dateEngine.interfaces.DateQuery;
+import rssRepository.RSSItemTableQueries;
+import rssRepository.interfaces.RSSItemRepository;
+import rssRepository.RSSItemModel;
+import database.DataBase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import searchEngine.interfaces.SearchEngine;
-import websiteTable.enumaration.WebsiteTableQueries;
-import websiteTable.interfaces.WebSiteRepository;
-import websiteTable.model.NewsWebPageModel;
+import webSiteRepository.WebsiteTableQueries;
+import webSiteRepository.interfaces.WebSiteRepository;
+import webSiteRepository.NewsWebPageModel;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class DataBaseTest {
     DataBase dataBase = null;

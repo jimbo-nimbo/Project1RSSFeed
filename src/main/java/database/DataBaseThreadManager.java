@@ -1,7 +1,7 @@
-package database.implementation;
+package database;
 
-import RSSTable.model.RSSItemModel;
-import websiteTable.model.NewsWebPageModel;
+import rssRepository.RSSItemModel;
+import webSiteRepository.NewsWebPageModel;
 
 import java.util.ArrayList;
 import java.util.List;

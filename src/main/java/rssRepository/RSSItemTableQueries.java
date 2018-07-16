@@ -1,4 +1,4 @@
-package RSSTable.enumaration;
+package rssRepository;
 
 public enum RSSItemTableQueries {
   CREATE_RSSITEM_TABLE_IF_NOT_EXISTS(

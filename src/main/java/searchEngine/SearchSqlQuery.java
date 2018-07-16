@@ -1,4 +1,4 @@
-package searchEngine.enumarations;
+package searchEngine;
 
 public enum SearchSqlQuery {
   SEARCH_FOR_TITLE_IN_RSSITEM("SELECT * FROM RssItem WHERE title LIKE ?;"),

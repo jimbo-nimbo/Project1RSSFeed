@@ -1,4 +1,4 @@
-package websiteTable.enumaration;
+package webSiteRepository;
 
 public enum WebsiteTableQueries {
   CREATE_WEBSITE_TABLE_IF_NOT_EXISTS(

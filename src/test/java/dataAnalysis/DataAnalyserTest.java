@@ -1,19 +1,15 @@
 package dataAnalysis;
 
-import RSSTable.interfaces.RSSItemRepository;
-import asg.cliche.Command;
-import database.implementation.DataBase;
-import dateEngine.interfaces.DateQuery;
+import rssRepository.interfaces.RSSItemRepository;
+import database.DataBase;
 import org.junit.Before;
 import org.junit.Test;
 import searchEngine.interfaces.SearchEngine;
-import websiteTable.interfaces.WebSiteRepository;
+import webSiteRepository.interfaces.WebSiteRepository;
 
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 public class DataAnalyserTest {
 
