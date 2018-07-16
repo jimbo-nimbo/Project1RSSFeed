@@ -12,130 +12,130 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class NewsWebPageModel implements NewsWebPageInformation {
-    private String link;
-    private String targetClass;
-    private String datePattern;
-    private String title;
-    private String description;
+  private String link;
+  private String targetClass;
+  private String datePattern;
+  private String title;
+  private String description;
 
-    private RSSItemRepository rssItemRepository;
+  private RSSItemRepository rssItemRepository;
 
-    public NewsWebPageModel(ResultSet resultSet, RSSItemRepository rssItemRepository) {
-        this.rssItemRepository = rssItemRepository;
-        try {
-            link = resultSet.getString("url");
-            targetClass = resultSet.getString("class");
-            datePattern = resultSet.getString("datePattern");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        fetchTitleAndDescription();
+  public NewsWebPageModel(ResultSet resultSet, RSSItemRepository rssItemRepository) {
+    this.rssItemRepository = rssItemRepository;
+    try {
+      link = resultSet.getString("url");
+      targetClass = resultSet.getString("class");
+      datePattern = resultSet.getString("datePattern");
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
+    fetchTitleAndDescription();
+  }
 
-    public NewsWebPageModel(
-            String link, String targetClass, String dataPattern, RSSItemRepository rssItemRepository) {
-        this.link = link;
-        this.targetClass = targetClass;
-        this.rssItemRepository = rssItemRepository;
-        this.datePattern = dataPattern;
+  public NewsWebPageModel(
+      String link, String targetClass, String dataPattern, RSSItemRepository rssItemRepository) {
+    this.link = link;
+    this.targetClass = targetClass;
+    this.rssItemRepository = rssItemRepository;
+    this.datePattern = dataPattern;
 
-        fetchTitleAndDescription();
+    fetchTitleAndDescription();
+  }
+
+  @Override
+  public String getDatePattern() {
+    return datePattern;
+  }
+
+  private void fetchTitleAndDescription() {
+    try {
+      Document document = Jsoup.connect(link).get();
+      title =
+          document.select("title").first() == null ? null : document.select("title").first().text();
+      description =
+          document.select("description").first() == null
+              ? null
+              : document.select("description").first().text();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public String getDatePattern() {
-        return datePattern;
+  public void update() {
+    try {
+      Document document = Jsoup.connect(link).get();
+
+      Element title;
+      Element description;
+      Element link;
+      Element pubDate;
+      for (Element element : document.select("item")) {
+        title = element.select("title").first();
+        description = element.select("description").first();
+        link = element.select("link").first();
+        pubDate = element.select("pubDate").first();
+        rssItemRepository.addRSSItem(
+            new RSSItemModel(
+                title == null ? null : title.text(),
+                description == null ? null : description.text(),
+                link == null ? null : link.text(),
+                pubDate == null ? null : pubDate.text(),
+                this));
+      }
+    } catch (IOException e) {
+      System.out.println("website " + getLink() + " not updated!!!");
     }
+  }
 
-    private void fetchTitleAndDescription() {
-        try {
-            Document document = Jsoup.connect(link).get();
-            title =
-                    document.select("title").first() == null ? null : document.select("title").first().text();
-            description =
-                    document.select("description").first() == null
-                            ? null
-                            : document.select("description").first().text();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void update() {
-        try {
-            Document document = Jsoup.connect(link).get();
+  public String getDescription() {
+    return description;
+  }
 
-            Element title;
-            Element description;
-            Element link;
-            Element pubDate;
-            for (Element element : document.select("item")) {
-                title = element.select("title").first();
-                description = element.select("description").first();
-                link = element.select("link").first();
-                pubDate = element.select("pubDate").first();
-                rssItemRepository.addRSSItem(
-                        new RSSItemModel(
-                                title == null ? null : title.text(),
-                                description == null ? null : description.text(),
-                                link == null ? null : link.text(),
-                                pubDate == null ? null : pubDate.text(),
-                                this));
-            }
-        } catch (IOException e) {
-            System.out.println("website " + getLink() + " not updated!!!");
-        }
-    }
+  @Override
+  public String getLink() {
+    return link;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public String getTargetClass() {
+    return targetClass;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    NewsWebPageModel that = (NewsWebPageModel) o;
+    return Objects.equals(link, that.link)
+        && Objects.equals(targetClass, that.targetClass)
+        && Objects.equals(title, that.title)
+        && Objects.equals(description, that.description);
+  }
 
-    @Override
-    public String getLink() {
-        return link;
-    }
+  @Override
+  public int hashCode() {
 
-    public String getTargetClass() {
-        return targetClass;
-    }
+    return Objects.hash(link, targetClass, title, description);
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NewsWebPageModel that = (NewsWebPageModel) o;
-        return Objects.equals(link, that.link)
-                && Objects.equals(targetClass, that.targetClass)
-                && Objects.equals(title, that.title)
-                && Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(link, targetClass, title, description);
-    }
-
-    @Override
-    public String toString() {
-        return "NewsWebPageModel{"
-                + "link='"
-                + link
-                + '\''
-                + ", targetClass='"
-                + targetClass
-                + '\''
-                + ", title='"
-                + title
-                + '\''
-                + ", description='"
-                + description
-                + '\''
-                + '}';
-    }
+  @Override
+  public String toString() {
+    return "NewsWebPageModel{"
+        + "link='"
+        + link
+        + '\''
+        + ", targetClass='"
+        + targetClass
+        + '\''
+        + ", title='"
+        + title
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + '}';
+  }
 }
