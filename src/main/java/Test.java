@@ -1,10 +1,8 @@
-package main;
-
 public class Test {
-  private static RSSService rssService;
+//  private static RSSService rssService;
 
-  public static void main(String[] args) {
-    rssService = new RSSService();
+//  public static void main(String[] args) {
+//    rssService = new RSSService();
 
     // add some websites to database
 //    rssService.addWebSite("http://www.irinn.ir/fa/rss/allnews", "body", "dd MMM yyyy HH:mm:ss zzz");
@@ -20,5 +18,5 @@ public class Test {
 //    // System.out.println("hello");
 //
 //    rssService.updateDataBase();
-  }
+//  }
 }

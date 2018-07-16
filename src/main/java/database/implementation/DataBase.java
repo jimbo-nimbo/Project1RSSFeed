@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery, SearchEngine {
-  private DataBaseThreadManager dataBaseThreadManager;
   /** Map for caching RSSItems and newsAgencies */
   private HashMap<String, NewsWebPageModel> webPageInformationHashMap;
 
@@ -44,7 +43,6 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
   }
 
   private DataBase() {
-    dataBaseThreadManager = new DataBaseThreadManager(this);
     webPageInformationHashMap = new HashMap<>();
     rssItemModelHashMap = new HashMap<>();
     webSiteTableLock = new Object();
@@ -191,7 +189,10 @@ public class DataBase implements WebSiteRepository, RSSItemRepository, DateQuery
         addRSS.setDate(4, date);
         addRSS.setString(5, rssItemModel.getArticle());
         addRSS.setString(6, rssItemModel.getNewsWebPage());
-        addRSS.execute();
+        synchronized (rssItemTableLock)
+        {
+          addRSS.execute();
+        }
       }
     } catch (SQLException e) {
       e.printStackTrace();

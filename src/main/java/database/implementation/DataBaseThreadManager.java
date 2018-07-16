@@ -9,20 +9,23 @@ import java.util.concurrent.*;
 
 public class DataBaseThreadManager {
 
-    private static final int THREAD_NUM = 10;
+    private static final int THREAD_NUM = 20;
     private static DataBaseThreadManager dataBaseThreadManager = null;
     private DataBase dataBase;
     private ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUM);
-
-    public DataBaseThreadManager(DataBase dataBase) {
-        this.dataBase = dataBase;
-    }
 
     public static synchronized DataBaseThreadManager getInstance() {
         if (dataBaseThreadManager == null) {
             dataBaseThreadManager = new DataBaseThreadManager(DataBase.getInstance());
         }
         return dataBaseThreadManager;
+    }
+
+    private DataBaseThreadManager(DataBase dataBase) {
+        this.dataBase = dataBase;
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.schedule(() -> updateDataBase(),
+        100, TimeUnit.SECONDS);
     }
 
     public void updateSite(NewsWebPageModel newsWebPageModel) {
@@ -93,8 +96,12 @@ public class DataBaseThreadManager {
         };
         Future<List<RSSItemModel> > future = executor.submit(callableList);
         return future;
+    }
 
-
-
+    public Future<List<RSSItemModel>> getAllRssData()
+    {
+        Callable<List<RSSItemModel>> callable = () -> dataBase.getAllRSSData();
+        Future<List<RSSItemModel>> future = executor.submit(callable);
+        return future;
     }
 }
