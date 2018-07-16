@@ -14,10 +14,10 @@ public class RSSService
     private WebSiteRepository webSiteRepository;
     private RSSItemRepository rssItemRepository;
     private SearchEngine searchEngine;
-
+    private DataBase dataBase;
     public RSSService()
     {
-        DataBase dataBase = DataBase.getInstance();
+        dataBase = DataBase.getInstance();
         webSiteRepository = dataBase;
         rssItemRepository = dataBase;
         searchEngine = dataBase;
@@ -43,7 +43,7 @@ public class RSSService
         webSiteRepository.getWebsites().forEach(e ->
         {
             System.out.println(e.getLink());
-            e.update();
+            dataBase.dataBaseThreadManager.updateSite(e);
         });
     }
 
