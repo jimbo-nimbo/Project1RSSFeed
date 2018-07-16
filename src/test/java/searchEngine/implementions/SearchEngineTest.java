@@ -1,12 +1,12 @@
 package searchEngine.implementions;
 
+import cli.RssService;
+import core.Core;
 import rssRepository.RSSItemModel;
-import database.DataBase;
-import SearchInjectQuery;
-import searchEngine.interfaces.SearchEngine;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import searchEngine.SearchEngine;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -14,7 +14,12 @@ import java.util.ArrayList;
 
 public class SearchEngineTest
 {
-    private SearchEngine searchEngine = DataBase.getInstance();
+	String INJECT_DATA_TO_RSS_ITEM = "INSERT  INTO RssItem "
+		      + "(title, description, link, pubDate, article, newsWebPage) VALUES "
+		      + "(?, ?, ?, ?, ?, (SELECT (url) FROM WebSite WHERE url LIKE ?));";
+	String DELETE_DATA_FROM_RSS_ITEM = "DELETE FROM RssItem " + "WHERE link = ?;";
+  private SearchEngine searchEngine = Core.getInstance().getSearchEngine();
+
     @Before
     public void setup(){
         injectDate();
@@ -22,7 +27,8 @@ public class SearchEngineTest
 
     @After
     public void clean(){
-        DataBase.getInstance().execute(SearchInjectQuery.DELETE_DATA_FROM_RSS_ITEM.toString(), "testLink");
+        Core.getInstance().getDatabaseConnectionPool().
+		        execute(DELETE_DATA_FROM_RSS_ITEM, "testLink");
     }
 
     @Test

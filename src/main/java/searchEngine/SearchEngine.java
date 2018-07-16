@@ -1,6 +1,7 @@
 package searchEngine;
 
 import core.Core;
+import core.Service;
 import database.DatabaseConnectionPool;
 import rssRepository.RSSItemModel;
 import rssRepository.RssItemRepository;
@@ -8,14 +9,17 @@ import rssRepository.RssItemRepository;
 import java.sql.ResultSet;
 import java.util.List;
 
-public class SearchEngine {
-    private static SearchEngine ourInstance = new SearchEngine();
-    private static Core core = Core.getInstance();
-    private static DatabaseConnectionPool databaseConnectionPool = core.getDatabaseConnectionPool();
-    private static RssItemRepository rssItemRepository = core.getRssRepository();
+public class SearchEngine extends Service
+{
+    private static DatabaseConnectionPool databaseConnectionPool;
+    private static RssItemRepository rssItemRepository;
 
-    synchronized public static SearchEngine getInstance() {
-        return ourInstance;
+    public SearchEngine(Core core)
+    {
+        super(core);
+        databaseConnectionPool = core.getDatabaseConnectionPool();
+        rssItemRepository = core.getRssRepository();
+        core.setSearchEngine(this);
     }
 
     public List<RSSItemModel> searchTitle(String context) {

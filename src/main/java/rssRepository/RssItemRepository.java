@@ -1,6 +1,7 @@
 package rssRepository;
 
 import core.Core;
+import core.Service;
 import database.DatabaseConnectionPool;
 import webSiteRepository.NewsWebPageModel;
 import webSiteRepository.WebSiteRepository;
@@ -13,17 +14,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RssItemRepository {
-  private static RssItemRepository ourInstance = new RssItemRepository();
-  private static Core core = Core.getInstance();
-  private static DatabaseConnectionPool databaseConnectionPool = core.getDatabaseConnectionPool();
+public class RssItemRepository extends Service
+{
+  private static DatabaseConnectionPool databaseConnectionPool;
   private HashMap<String, RSSItemModel> rssItemModelHashMap;
-  private static WebSiteRepository webSiteRepository = core.getWebSiteRepository();
+  private static WebSiteRepository webSiteRepository;
 
-  private RssItemRepository() {}
-
-  synchronized public static RssItemRepository getInstance() {
-    return ourInstance;
+  public RssItemRepository(Core core) {
+    super(core);
+    databaseConnectionPool = core.getDatabaseConnectionPool();
+    webSiteRepository = core.getWebSiteRepository();
+    core.setRssRepository(this);
   }
 
   public void addRSSItem(RSSItemModel rssItemModel) {

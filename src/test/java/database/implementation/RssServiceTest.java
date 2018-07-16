@@ -1,20 +1,21 @@
 package database.implementation;
 
-import database.DataBaseThreadManager;
+import cli.RssService;
+import core.Core;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class DataBaseThreadManagerTest
+public class RssServiceTest
 {
-    private static DataBaseThreadManager dataBaseThreadManager;
+    private static RssService rssService;
 
     @Before
     @Test
     public void getInstance()
     {
-        dataBaseThreadManager = DataBaseThreadManager.getInstance();
+        rssService = Core.getInstance().getRssService();
     }
 
     @Test
@@ -22,13 +23,13 @@ public class DataBaseThreadManagerTest
     {
         try
         {
-            dataBaseThreadManager.addWebSite("https://www.isna.ir/rss",
+            rssService.addWebSite("https://www.isna.ir/rss",
                     "item-text", "E, dd MMM yyyy HH:mm:ss zzz");
-            dataBaseThreadManager.addWebSite("https://www.yjc.ir/fa/rss/allnews",
+            rssService.addWebSite("https://www.yjc.ir/fa/rss/allnews",
                     "body", "dd MMM yyyy HH:mm:ss zzz");
-            dataBaseThreadManager.addWebSite("http://www.tabnak.ir/fa/rss/allnews",
+            rssService.addWebSite("http://www.tabnak.ir/fa/rss/allnews",
                     "item-text", "dd MMM yyyy HH:mm:ss zzz");
-            dataBaseThreadManager.addWebSite("http://www.irna.ir/en/rss.aspx?kind=-1&area=0",
+            rssService.addWebSite("http://www.irna.ir/en/rss.aspx?kind=-1&area=0",
                     "bodytext", "EEE, dd MMM yyyy HH:mm");
         } catch (InterruptedException e)
         {
@@ -41,7 +42,7 @@ public class DataBaseThreadManagerTest
     {
         try
         {
-            System.out.println(dataBaseThreadManager.getWebSites().get());
+            System.out.println(rssService.getWebSites().get());
         } catch (InterruptedException | ExecutionException e)
         {
             e.printStackTrace();
@@ -51,17 +52,17 @@ public class DataBaseThreadManagerTest
     @Test
     public void updateDataBase()
     {
-        dataBaseThreadManager.updateDataBase();
+        rssService.updateDataBase();
     }
 
     @Test
     public void updateDatabaseForWebsite()
     {
-        dataBaseThreadManager.updateDatabaseForWebsite(
+        rssService.updateDatabaseForWebsite(
                 "https://www.isna.ir/rss");
-        dataBaseThreadManager.updateDatabaseForWebsite(
+        rssService.updateDatabaseForWebsite(
                 "https://www.yjc.ir/fa/rss/allnews");
-        dataBaseThreadManager.updateDatabaseForWebsite(
+        rssService.updateDatabaseForWebsite(
                 "http://www.tabnak.ir/fa/rss/allnews");
     }
 
@@ -72,14 +73,14 @@ public class DataBaseThreadManagerTest
         {
             System.out.println("hello");
             System.out.println(
-                    dataBaseThreadManager.getWebSiteRssData("https://www.yjc.ir/fa/rss/allnews").get());
+                    rssService.getWebSiteRssData("https://www.yjc.ir/fa/rss/allnews").get());
         } catch (InterruptedException | ExecutionException e)
         {
             e.printStackTrace();
         }
 
-        dataBaseThreadManager.getExecutor().shutdown();
-        while (!dataBaseThreadManager.getExecutor().awaitTermination(24L, TimeUnit.HOURS)) {
+        rssService.getExecutor().shutdown();
+        while (!rssService.getExecutor().awaitTermination(24L, TimeUnit.HOURS)) {
             System.out.println("Not yet. Still waiting for termination");
         }
 
@@ -92,7 +93,7 @@ public class DataBaseThreadManagerTest
         try
         {
             System.out.println(
-                    dataBaseThreadManager.getAllRssData().get().size());
+                    rssService.getAllRssData().get().size());
         } catch (InterruptedException e)
         {
             e.printStackTrace();

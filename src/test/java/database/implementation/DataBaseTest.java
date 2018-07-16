@@ -1,15 +1,17 @@
 package database.implementation;
 
+import core.Core;
+import database.DatabaseConnectionPool;
+import dateEngine.DateEngine;
 import rssRepository.RSSItemTableQueries;
-import rssRepository.interfaces.RSSItemRepository;
 import rssRepository.RSSItemModel;
-import database.DataBase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import searchEngine.interfaces.SearchEngine;
+import rssRepository.RssItemRepository;
+import searchEngine.SearchEngine;
+import webSiteRepository.WebSiteRepository;
 import webSiteRepository.WebsiteTableQueries;
-import webSiteRepository.interfaces.WebSiteRepository;
 import webSiteRepository.NewsWebPageModel;
 
 import java.sql.Date;
@@ -18,17 +20,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DataBaseTest {
-    DataBase dataBase = null;
-    RSSItemRepository rssItemRepository;
-    WebSiteRepository webSiteRepository;
-    SearchEngine searchEngine;
-    @Before
-    public void setUp() throws Exception {
-        dataBase = DataBase.getInstance();
-        rssItemRepository = dataBase;
-        webSiteRepository = dataBase;
-        searchEngine = dataBase;
-    }
+  DatabaseConnectionPool dataBase = Core.getInstance().getDatabaseConnectionPool();
+    RssItemRepository rssItemRepository = Core.getInstance().getRssRepository();
+    WebSiteRepository webSiteRepository = Core.getInstance().getWebSiteRepository();
+    SearchEngine searchEngine = Core.getInstance().getSearchEngine();
 
     @After
     public void tearDown() throws Exception {
@@ -62,8 +57,8 @@ public class DataBaseTest {
         dataBase.execute(WebsiteTableQueries.DROP_WEB_SITE_TABLE.toString());
         dataBase.execute(WebsiteTableQueries.CREATE_WEBSITE_TABLE_IF_NOT_EXISTS.toString());
         dataBase.execute(RSSItemTableQueries.CREATE_RSSITEM_TABLE_IF_NOT_EXISTS.toString());
-        dataBase.addWebSite(new NewsWebPageModel("http://www.irinn.ir/fa/rss/allnews", "body",
-                "dd MMM yyyy HH:mm:ss zzz", rssItemRepository));
+        webSiteRepository.addWebSite(new NewsWebPageModel("http://www.irinn.ir/fa/rss/allnews", "body",
+                "dd MMM yyyy HH:mm:ss zzz"));
         ResultSet resultSet = dataBase.executeQuery(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
         try {
             resultSet.beforeFirst();
@@ -118,9 +113,9 @@ public class DataBaseTest {
 
     @Test
     public void getTodayNewsForWebsite() {
-        DateQuery dateQuery = DataBase.getInstance();
         Date today = new Date(System.currentTimeMillis());
-        ArrayList<RSSItemModel> ans = (ArrayList<RSSItemModel>) dateQuery.getNewsForWebsiteByDate("http://www.irinn.ir/fa/rss/allnews", today);
+        ArrayList<RSSItemModel> ans = (ArrayList<RSSItemModel>) Core.getInstance().getDateEngine()
+                .getNewsForWebsiteByDate("http://www.irinn.ir/fa/rss/allnews", today);
         for(RSSItemModel rssItemModel : ans){
             System.err.println("today news: " + rssItemModel.getTitle());
         }
@@ -142,44 +137,47 @@ public class DataBaseTest {
 
     @Test
     public void addWebSiteTest(){
-        DataBase.getInstance().addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text", "",DataBase.getInstance()));
-        DataBase.getInstance().addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" , "item-body", "", DataBase.getInstance()));
+        webSiteRepository.addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text",
+                ""));
+        webSiteRepository.addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" ,
+                "item-body", ""));
     }
 
     @Test
     public void getWebsiteListTest(){
 
-        for (NewsWebPageModel newsWebPageModel : DataBase.getInstance().getWebsites())
+    System.out.println(webSiteRepository.getWebsites());
+        for (NewsWebPageModel newsWebPageModel : webSiteRepository.getWebsites())
             System.out.println(newsWebPageModel);
     }
 
     @Test
     public void updateRSSItemsTest()
     {
-        DataBase.getInstance().getWebsites().get(1).update();
+        webSiteRepository.getWebsites().get(1).update();
     }
 
     @Test
     public void getWebsiteTest()
     {
-        System.out.println(DataBase.getInstance().getWebsite("http://www.varzesh3.com/rss/all"));
+        System.out.println(webSiteRepository.getWebsite("http://www.varzesh3.com/rss/all"));
     }
 
     @Test
     public void getAllRSSDataTest()
     {
-        System.out.println(DataBase.getInstance().getAllRSSData());
+        System.out.println(rssItemRepository.getAllRSSData());
     }
 
     @Test
     public void getRSSDataFromWebSiteTest()
     {
-        System.out.println(DataBase.getInstance().getRSSDataFromWebSite("https://en.isna.ir/rss"));
+        System.out.println(rssItemRepository.getRSSDataFromWebSite("https://en.isna.ir/rss"));
     }
 
     @Test
     public void getArticleTest()
     {
-        System.out.println(DataBase.getInstance().getArticle("http://www.varzesh3.com/news/1537867/ضیایی-اتاق-رییس-فدراسیون-خانه-بازیکنان-است"));
+        System.out.println(rssItemRepository.getArticle("http://www.varzesh3.com/news/1537867/ضیایی-اتاق-رییس-فدراسیون-خانه-بازیکنان-است"));
     }
 }

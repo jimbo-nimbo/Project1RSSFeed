@@ -2,7 +2,7 @@ package cli;
 
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
-import database.DataBaseThreadManager;
+import core.Core;
 import webSiteRepository.NewsWebPageModel;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 
 public class Cli {
 
-    DataBaseThreadManager dataBase = DataBaseThreadManager.getInstance();
+    RssService dataBase = Core.getInstance().getRssService();
 
     public static void main(String[] args) throws IOException {
         ShellFactory.createConsoleShell("RssProject-Jimbo", "", new Cli()).commandLoop(); // and three.
@@ -20,7 +20,7 @@ public class Cli {
 
     @Command
     public String getwebsites() {
-        Future<List<NewsWebPageModel>> news = (Future<List<NewsWebPageModel>>) dataBase.getWebSites();
+        Future<List<NewsWebPageModel>> news = dataBase.getWebSites();
         StringBuilder myString = new StringBuilder();
         try {
             List<NewsWebPageModel> myList = news.get();

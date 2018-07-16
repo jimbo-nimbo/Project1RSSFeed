@@ -1,7 +1,8 @@
 package core;
 
+import cli.RssService;
 import database.DatabaseConnectionPool;
-import dateEngine.DateQueries;
+import dateEngine.DateEngine;
 import rssRepository.RssItemRepository;
 import searchEngine.SearchEngine;
 import webSiteRepository.WebSiteRepository;
@@ -13,14 +14,17 @@ public class Core
 	private RssItemRepository rssRepository;
 	private WebSiteRepository webSiteRepository;
 	private SearchEngine searchEngine;
-	private DateQueries dateQueries;
+	private DateEngine dateEngine;
+	private RssService rssService;
 
 	private Core()
 	{
-		databaseConnectionPool = DatabaseConnectionPool.getInstance();
-		rssRepository = RssItemRepository.getInstance();
-		webSiteRepository = WebSiteRepository.getInstance();
-		searchEngine = SearchEngine.getInstance();
+		databaseConnectionPool = new DatabaseConnectionPool(this);
+		rssRepository = new RssItemRepository(this);
+		webSiteRepository = new WebSiteRepository(this);
+		searchEngine = new SearchEngine(this);
+		dateEngine = new DateEngine(this);
+		rssService = new RssService(this);
 	}
 
 	public synchronized static Core getInstance()
@@ -45,5 +49,45 @@ public class Core
 	public DatabaseConnectionPool getDatabaseConnectionPool()
 	{
 		return databaseConnectionPool;
+	}
+
+	public void setDatabaseConnectionPool(DatabaseConnectionPool databaseConnectionPool)
+	{
+		this.databaseConnectionPool = databaseConnectionPool;
+	}
+
+	public void setRssRepository(RssItemRepository rssRepository)
+	{
+		this.rssRepository = rssRepository;
+	}
+
+	public void setWebSiteRepository(WebSiteRepository webSiteRepository)
+	{
+		this.webSiteRepository = webSiteRepository;
+	}
+
+	public void setSearchEngine(SearchEngine searchEngine)
+	{
+		this.searchEngine = searchEngine;
+	}
+
+	public void setDateEngine(DateEngine dateEngine)
+	{
+		this.dateEngine = dateEngine;
+	}
+
+	public RssService getRssService()
+	{
+		return rssService;
+	}
+
+	public void setRssService(RssService rssService)
+	{
+		this.rssService = rssService;
+	}
+
+	public DateEngine getDateEngine()
+	{
+		return dateEngine;
 	}
 }

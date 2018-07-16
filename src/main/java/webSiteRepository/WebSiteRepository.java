@@ -1,6 +1,7 @@
 package webSiteRepository;
 
 import core.Core;
+import core.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,15 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WebSiteRepository
+public class WebSiteRepository extends Service
 {
-	private static WebSiteRepository ourInstance = new WebSiteRepository();
 	private HashMap<String, NewsWebPageModel> webPageInformationHashMap = new HashMap<>();
-	private static Core core = Core.getInstance();
 
-	synchronized public static WebSiteRepository getInstance()
+	public WebSiteRepository(Core core)
 	{
-		return ourInstance;
+		super(core);
+		core.setWebSiteRepository(this);
 	}
 
 	public void addWebSite(NewsWebPageModel newsWebPageModel) {
@@ -66,6 +66,7 @@ public class WebSiteRepository
 	}
 
 	public List<NewsWebPageModel> getWebsites() {
+    System.out.println("hello");
 		ArrayList<NewsWebPageModel> ans = null;
 		try {
 			ResultSet resultSet = core.getDatabaseConnectionPool().executeQuery(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
