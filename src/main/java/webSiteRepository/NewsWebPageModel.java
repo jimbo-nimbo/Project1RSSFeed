@@ -51,7 +51,7 @@ public class NewsWebPageModel {
               ? null
               : document.select("description").first().text();
     } catch (IOException e) {
-      e.printStackTrace();
+      Core.getInstance().logToFile("jsoup cant connect to url : " + e.getMessage());
     }
   }
 

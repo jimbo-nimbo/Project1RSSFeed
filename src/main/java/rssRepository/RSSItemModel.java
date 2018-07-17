@@ -1,5 +1,6 @@
 package rssRepository;
 
+import core.Core;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import webSiteRepository.NewsWebPageModel;
@@ -87,7 +88,7 @@ public class RSSItemModel {
       Document document = Jsoup.connect(asciiLink).get();
       article = document.select("div." + newsWebPageModel.getTargetClass()).text();
     } catch (IOException e) {
-      e.printStackTrace();
+      Core.getInstance().logToFile(" jsoup cant fetch link " + link + " " + e.getMessage());
     }
   }
 

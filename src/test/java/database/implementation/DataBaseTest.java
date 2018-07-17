@@ -138,10 +138,9 @@ public class DataBaseTest {
 
     @Test
     public void addWebSiteTest(){
-        webSiteRepository.addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text",
-                ""));
-        webSiteRepository.addWebSite(new NewsWebPageModel("https://en.isna.ir/rss" ,
-                "item-body", ""));
+//        webSiteRepository.addWebSite(new NewsWebPageModel("http://www.varzesh3.com/rss/all", "news-page--news-text",
+//                ""));
+        webSiteRepository.addWebSite(new NewsWebPageModel("http://www.irna.ir/en/rss.aspx?kind=-1&area=0", "bodytext", "EEE, dd MMM yyyy HH:mm"));
     }
 
     @Test

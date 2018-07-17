@@ -28,15 +28,19 @@ public class Cli {
                 myString.append(newsWebPageModel.toString() + "\n");
             }
         } catch (InterruptedException | ExecutionException e) {
-            myString.append("some problem happen");
-            e.printStackTrace();
+            myString.append("some problem happen + \n");
+            myString.append(e.getMessage());
         }
         return myString.toString();
     }
 
     @Command
     public String addwebsite(String link, String targetClass, String timeFormat) {
-        dataBase.addWebSite(link, targetClass, timeFormat);
+        try {
+            dataBase.addWebSite(link, targetClass, timeFormat);
+        } catch (InterruptedException e) {
+            Core.getInstance().logToFile(e.getMessage());
+        }
         return "done";
     }
 
