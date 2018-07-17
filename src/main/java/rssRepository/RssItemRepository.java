@@ -22,6 +22,7 @@ public class RssItemRepository extends Service
 
   public RssItemRepository(Core core) {
     super(core);
+    rssItemModelHashMap = new HashMap<>();
     databaseConnectionPool = core.getDatabaseConnectionPool();
     webSiteRepository = core.getWebSiteRepository();
     core.setRssRepository(this);

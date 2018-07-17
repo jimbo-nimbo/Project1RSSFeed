@@ -36,13 +36,22 @@ public class Cli {
 
     @Command
     public String addwebsite(String link, String targetClass, String timeFormat) {
-        try {
-            dataBase.addWebSite(link, targetClass, timeFormat);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        dataBase.addWebSite(link, targetClass, timeFormat);
         return "done";
     }
 
+    @Command
+    public String update(String link)
+    {
+        dataBase.updateDatabaseForWebsite(link);
+        return "done";
+    }
+
+    @Command
+    public String update()
+    {
+        dataBase.updateDataBase();
+        return "done";
+    }
 
 }
