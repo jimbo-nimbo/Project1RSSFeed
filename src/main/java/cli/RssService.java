@@ -30,12 +30,12 @@ public class RssService extends Service {
     executor.execute(siteUpdate);
   }
 
-  public void addWebSite(String websiteLink, String targetClass, String datePattern)
+  public void addWebSite(String websiteLink, String targetClass)
       throws InterruptedException {
     Runnable addWebsite =
         () -> {
           core.getWebSiteRepository()
-              .addWebSite(new NewsWebPageModel(websiteLink, targetClass, datePattern));
+              .addWebSite(websiteLink, targetClass);
         };
     executor.execute(addWebsite);
   }
@@ -89,7 +89,7 @@ public class RssService extends Service {
 
   public Future<List<RSSItemModel>> getWebSiteRssData(String webPageLink) {
     Callable<List<RSSItemModel>> callableList =
-        () -> core.getRssRepository().getRSSDataFromWebSite(webPageLink);
+        () -> core.getRssRepository().rssForWebsite(webPageLink);
     Future<List<RSSItemModel>> future = executor.submit(callableList);
     return future;
   }

@@ -8,8 +8,6 @@ import webSiteRepository.WebsiteTableQueries;
 
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseConnectionPool extends Service {
@@ -71,20 +69,4 @@ public class DatabaseConnectionPool extends Service {
     return null;
   }
 
-  public ResultSet executeQuery(Connection conn, String query, String... param)
-      throws SQLException {
-    PreparedStatement statement = conn.prepareStatement(query);
-    for (int i = 0; i < param.length; i++) {
-      statement.setString(i + 1, param[i]);
-    }
-    return statement.executeQuery();
-  }
-
-  public void execute(Connection conn, String query, String... param) throws SQLException {
-    PreparedStatement statement = conn.prepareStatement(query);
-    for (int i = 0; i < param.length; i++) {
-      statement.setString(i + 1, param[i]);
-    }
-    statement.execute();
-  }
 }

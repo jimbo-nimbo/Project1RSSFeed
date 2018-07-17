@@ -9,6 +9,7 @@ import searchEngine.SearchEngine;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -28,9 +29,8 @@ public class SearchEngineTest {
   @After
   public void clean() {
     try (Connection conn = Core.getInstance().getDatabaseConnectionPool().getConnection()) {
-      Core.getInstance()
-          .getDatabaseConnectionPool()
-          .execute(conn, DELETE_DATA_FROM_RSS_ITEM, "testLink");
+      PreparedStatement preparedStatement = conn.prepareStatement(DELETE_DATA_FROM_RSS_ITEM);
+      preparedStatement.setString(1, "testLink");
     } catch (SQLException e) {
       e.printStackTrace();
     }

@@ -23,13 +23,13 @@ public class RssServiceTest {
   @Test
   public void addWebSite() {
     try {
-      rssService.addWebSite("https://www.isna.ir/rss", "item-text", "E, dd MMM yyyy HH:mm:ss zzz");
+      rssService.addWebSite("https://www.isna.ir/rss", "item-text");
       rssService.addWebSite(
-          "https://www.yjc.ir/fa/rss/allnews", "body", "dd MMM yyyy HH:mm:ss zzz");
+          "https://www.yjc.ir/fa/rss/allnews", "body");
       rssService.addWebSite(
-          "http://www.tabnak.ir/fa/rss/allnews", "item-text", "dd MMM yyyy HH:mm:ss zzz");
+          "http://www.tabnak.ir/fa/rss/allnews", "item-text");
       rssService.addWebSite(
-          "http://www.irna.ir/en/rss.aspx?kind=-1&area=0", "bodytext", "EEE, dd MMM yyyy HH:mm");
+          "http://www.irna.ir/en/rss.aspx?kind=-1&area=0", "bodytext");
       Thread.sleep(10000);
     } catch (InterruptedException e) {
       e.printStackTrace();
@@ -80,19 +80,6 @@ public class RssServiceTest {
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-  @Test
-  public void executeQuery() {
-    try (Connection conn = Core.getInstance().getDatabaseConnectionPool().getConnection()) {
-      ResultSet resultSet = Core.getInstance().getDatabaseConnectionPool().executeQuery(conn, "describe RssItem;");
-      resultSet.first();
-      System.err.println(resultSet.getString(1));
-
-    } catch (SQLException e) {
       e.printStackTrace();
     }
   }

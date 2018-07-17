@@ -1,21 +1,27 @@
 package dateEngine;
 
-public enum DateQueries {
-  SELECT_TEN_LAST_RSS_ITEM_BY_WEBSITE(
-      "select * from RssItem where newsWebPage "
-          + "like (select url from WebSite where url like ?);"),
-  SELECT_BY_DATE_NEWS_BY_WEBSITE(
-      "SELECT * FROM RssItem WHERE newsWebPage "
-          + "LIKE (SELECT url FROM WebSite WHERE url LIKE ?) AND pubDate LIKE ?;");
+public enum DateQueries
+{
+    SELECT_SOME_LAST_RSS_ITEM_BY_WID(
+            "select * from RssItem" +
+                    "where WID = ? "
+                    + " ORDER BY pubDate DESC" +
+                    "LIMIT ?;"),
+    SELECT_RSS_FROM_WEBSITE_BY_DATE(
+            "SELECT * FROM RssItem WHERE" +
+                    " WID = ? "
+                    + "AND DATE(pubDate) = ?;");
 
-  private String query;
+    private String query;
 
-  DateQueries(String query) {
-    this.query = query;
-  }
+    DateQueries(String query)
+    {
+        this.query = query;
+    }
 
-  @Override
-  public String toString() {
-    return query;
-  }
+    @Override
+    public String toString()
+    {
+        return query;
+    }
 }

@@ -69,6 +69,11 @@ public class RSSItemModel {
     fetch();
   }
 
+  public NewsWebPageModel getNewsWebPageModel()
+  {
+    return newsWebPageModel;
+  }
+
   private void parseDate() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageModel.getDatePattern());
     try {
@@ -127,6 +132,11 @@ public class RSSItemModel {
 
   public void setDateString(String dateString) {
     this.dateString = dateString;
+  }
+
+  public int getId()
+  {
+    return id;
   }
 
   @Override

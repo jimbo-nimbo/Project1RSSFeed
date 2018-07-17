@@ -11,6 +11,7 @@ public enum WebsiteTableQueries {
           + "UNIQUE (link))"
           + " CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"),
   SELECT_WEBSITE_BY_LINK("SELECT * FROM WebSite WHERE link = ?;"),
+  SELECT_WEBISTE_BY_ID("SELECT * FROM WebSite WHERE WID = ?"),
   INSERT_INTO_TABLE("INSERT INTO WebSite (link, class, datePattern) VALUES (?,?,?);"),
   UPDATE_TARGET_CLASS_BY_LINK("UPDATE WebSite SET class = ?, datePattern = ? WHERE link = ?;"),
   SELECT_ALL_WEBSITES("SELECT * FROM WebSite;"),

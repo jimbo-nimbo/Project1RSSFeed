@@ -35,9 +35,9 @@ public class Cli {
   }
 
   @Command
-  public String addWebSite(String link, String targetClass, String timeFormat) {
+  public String addWebSite(String link, String targetClass) {
     try {
-      dataBase.addWebSite(link, targetClass, timeFormat);
+      dataBase.addWebSite(link, targetClass);
     } catch (InterruptedException e) {
       Core.getInstance().logToFile(e.getMessage());
     }

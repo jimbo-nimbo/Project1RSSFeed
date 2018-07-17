@@ -9,6 +9,8 @@ import rssRepository.RSSItemModel;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class NewsWebPageModel {
@@ -19,6 +21,11 @@ public class NewsWebPageModel {
   private String title;
   private String description;
 
+  private static DatePatterns datePatterns;
+  {
+    datePatterns = new DatePatterns();
+  }
+
   public NewsWebPageModel(ResultSet resultSet) {
     try {
       id = resultSet.getInt("WID");
@@ -28,7 +35,6 @@ public class NewsWebPageModel {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    fetchTitleAndDescription();
   }
 
   /**
@@ -36,17 +42,16 @@ public class NewsWebPageModel {
    * id is null first
    * @param link
    * @param targetClass
-   * @param dataPattern
    */
-  public NewsWebPageModel(String link, String targetClass, String dataPattern) {
+  public NewsWebPageModel(String link, String targetClass) {
     this.link = link;
     this.targetClass = targetClass;
-    this.datePattern = dataPattern;
 
-    fetchTitleAndDescription();
+    fetchTitleAndDescriptionAndDatePattern();
   }
 
-  private void fetchTitleAndDescription() {
+
+  private void fetchTitleAndDescriptionAndDatePattern() {
     try {
       Document document = Jsoup.connect(link).get();
       title =
@@ -55,6 +60,19 @@ public class NewsWebPageModel {
           document.select("description").first() == null
               ? null
               : document.select("description").first().text();
+
+      String dateString = document.select("pubDate").first().text();
+      SimpleDateFormat simpleDateFormat;
+      for (String datePattern: datePatterns.getPatterns()) {
+        simpleDateFormat = new SimpleDateFormat(datePattern);
+        try{
+          simpleDateFormat.parse(dateString);
+          this.datePattern = datePattern;
+          break;
+        } catch (ParseException ignored)
+        { }
+      }
+
     } catch (IOException e) {
       Core.getInstance().logToFile("jsoup cant connect to url : " + e.getMessage());
     }
@@ -108,6 +126,11 @@ public class NewsWebPageModel {
     return targetClass;
   }
 
+  public int getId()
+  {
+    return id;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -126,20 +149,15 @@ public class NewsWebPageModel {
   }
 
   @Override
-  public String toString() {
-    return "NewsWebPageModel{"
-        + "link='"
-        + link
-        + '\''
-        + ", targetClass='"
-        + targetClass
-        + '\''
-        + ", title='"
-        + title
-        + '\''
-        + ", description='"
-        + description
-        + '\''
-        + '}';
+  public String toString()
+  {
+    return "NewsWebPageModel{" +
+            "id=" + id +
+            ", link='" + link + '\'' +
+            ", targetClass='" + targetClass + '\'' +
+            ", datePattern='" + datePattern + '\'' +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            '}';
   }
 }

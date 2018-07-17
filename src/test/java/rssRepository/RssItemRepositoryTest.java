@@ -11,8 +11,6 @@ import webSiteRepository.WebSiteRepository;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 public class RssItemRepositoryTest {
 
   DatabaseConnectionPool dataBase = Core.getInstance().getDatabaseConnectionPool();
@@ -57,7 +55,7 @@ public class RssItemRepositoryTest {
   public void takeRssItemFromResultSetWithHashCheck() {}
   @Test
   public void getRSSDataFromWebSiteTest() {
-    System.out.println(rssItemRepository.getRSSDataFromWebSite("https://en.isna.ir/rss"));
+    System.out.println(rssItemRepository.rssForWebsite("https://en.isna.ir/rss"));
   }
 
 
