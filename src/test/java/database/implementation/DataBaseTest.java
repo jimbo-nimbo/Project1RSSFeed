@@ -14,6 +14,7 @@ import webSiteRepository.WebSiteRepository;
 import webSiteRepository.WebsiteTableQueries;
 import webSiteRepository.NewsWebPageModel;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,8 +37,8 @@ public class DataBaseTest {
 
     @Test
     public void executeQuery() {
-        ResultSet resultSet = dataBase.executeQuery("describe RssItem;");
-        try {
+        try(Connection conn = Core.getInstance().getDatabaseConnectionPool().getConnection()) {
+            ResultSet resultSet = dataBase.executeQuery(conn,"describe RssItem;");
             resultSet.first();
             System.err.println(resultSet.getString(1));
 
@@ -53,14 +54,14 @@ public class DataBaseTest {
 
     @Test
     public void addWebSite() {
-        dataBase.execute(RSSItemTableQueries.DROP_RSS_ITEM.toString());
-        dataBase.execute(WebsiteTableQueries.DROP_WEB_SITE_TABLE.toString());
-        dataBase.execute(WebsiteTableQueries.CREATE_WEBSITE_TABLE_IF_NOT_EXISTS.toString());
-        dataBase.execute(RSSItemTableQueries.CREATE_RSSITEM_TABLE_IF_NOT_EXISTS.toString());
+    try (Connection conn = Core.getInstance().getDatabaseConnectionPool().getConnection()) {
+      dataBase.execute(conn, RSSItemTableQueries.DROP_RSS_ITEM.toString());
+      dataBase.execute(conn, WebsiteTableQueries.DROP_WEB_SITE_TABLE.toString());
+      dataBase.execute(conn, WebsiteTableQueries.CREATE_WEBSITE_TABLE_IF_NOT_EXISTS.toString());
+      dataBase.execute(conn, RSSItemTableQueries.CREATE_RSSITEM_TABLE_IF_NOT_EXISTS.toString());
         webSiteRepository.addWebSite(new NewsWebPageModel("http://www.irinn.ir/fa/rss/allnews", "body",
                 "dd MMM yyyy HH:mm:ss zzz"));
-        ResultSet resultSet = dataBase.executeQuery(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
-        try {
+        ResultSet resultSet = dataBase.executeQuery(conn, WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
             resultSet.beforeFirst();
             while (resultSet.next()){
                 System.err.println("added this webpagemodel : " + resultSet.getString("url"));

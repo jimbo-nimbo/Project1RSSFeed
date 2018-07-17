@@ -72,30 +72,22 @@ public class DatabaseConnectionPool extends Service
 		return null;
 	}
 
-	public ResultSet executeQuery(String query, String... param) {
-		ResultSet resultSet = null;
-		try (Connection conn = getConnection()) {
-			PreparedStatement statement = conn.prepareStatement(query);
-			for (int i = 0; i < param.length; i++) {
-				statement.setString(i + 1, param[i]);
-			}
-			resultSet = statement.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public ResultSet executeQuery(Connection conn, String query, String... param)
+			throws SQLException {
+		PreparedStatement statement = conn.prepareStatement(query);
+		for (int i = 0; i < param.length; i++) {
+			statement.setString(i + 1, param[i]);
 		}
-		return resultSet;
+		return statement.executeQuery();
 	}
 
-	public void execute(String query, String... param) {
-		try (Connection conn = getConnection()) {
+	public void execute(Connection conn, String query, String... param) throws SQLException
+	{
 			PreparedStatement statement = conn.prepareStatement(query);
 			for (int i = 0; i < param.length; i++) {
 				statement.setString(i + 1, param[i]);
 			}
 			statement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

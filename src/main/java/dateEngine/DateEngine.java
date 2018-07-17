@@ -4,39 +4,40 @@ import core.Core;
 import core.Service;
 import rssRepository.RSSItemModel;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DateEngine extends Service
-{
+public class DateEngine extends Service {
 	private static final Long DAY_IN_MILI_SECOND = 3600 * 24 * 1000L;
 
-	public DateEngine(Core core)
-	{
+	public DateEngine(Core core) {
 		super(core);
 		core.setDateEngine(this);
 	}
 
 	public List<RSSItemModel> getTenLastNewsForWebsite(String newsWebPage) {
-		List<RSSItemModel> ans = new ArrayList<>();
-		ResultSet resultSet =
-				core.getDatabaseConnectionPool().executeQuery(DateQueries.SELECT_TEN_LAST_RSS_ITEM_BY_WEBSITE.toString(), newsWebPage);
-		return core.getRssRepository().takeRssItemFromResultSetWithHashCheck(resultSet);
+		try (Connection conn = core.getDatabaseConnectionPool().getConnection()) {
+			ResultSet resultSet =
+					core.getDatabaseConnectionPool()
+							.executeQuery(
+									conn, DateQueries.SELECT_TEN_LAST_RSS_ITEM_BY_WEBSITE.toString(), newsWebPage);
+
+			return core.getRssRepository().takeRssItemFromResultSetWithHashCheck(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
 	}
 
 	public List<RSSItemModel> getNewsForWebsiteByDate(String newsWebPage, Date date) {
 		List<RSSItemModel> ans = new ArrayList<>();
 		ResultSet resultSet = null;
-		try {
+		try (Connection conn = core.getDatabaseConnectionPool().getConnection()) {
 			PreparedStatement statement =
-					core.getDatabaseConnectionPool().getConnection().
-							prepareStatement(DateQueries.SELECT_BY_DATE_NEWS_BY_WEBSITE.toString());
+					conn.prepareStatement(DateQueries.SELECT_BY_DATE_NEWS_BY_WEBSITE.toString());
 			statement.setString(1, newsWebPage);
 			statement.setDate(2, date);
 			resultSet = statement.executeQuery();
@@ -46,8 +47,7 @@ public class DateEngine extends Service
 		return core.getRssRepository().takeRssItemFromResultSetWithHashCheck(resultSet);
 	}
 
-	public Map<Date, Integer> getLastDayStatics(String webLink, int days)
-	{
+	public Map<Date, Integer> getLastDayStatics(String webLink, int days) {
 		Map<Date, Integer> myMap = new HashMap<>();
 		Date date = new Date(System.currentTimeMillis());
 		for (int i = 0; i < days; i++) {

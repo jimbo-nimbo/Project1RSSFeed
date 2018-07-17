@@ -25,6 +25,7 @@ public class Core
 	private SearchEngine searchEngine;
 	private DateEngine dateEngine;
 	private RssService rssService;
+
 	Logger logger = Logger.getLogger("MyLog");
 	FileHandler fileHandler;
 	Path path = Paths.get("logFile.log");
@@ -41,6 +42,7 @@ public class Core
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		databaseConnectionPool = new DatabaseConnectionPool(this);
 		rssRepository = new RssItemRepository(this);
 		webSiteRepository = new WebSiteRepository(this);

@@ -72,7 +72,7 @@ public class RssService extends Service
           return true;
         };
 
-    Future future = executor.submit(callable);
+    Future<Boolean> future = executor.submit(callable);
 
     Runnable getNotify =
         () -> {

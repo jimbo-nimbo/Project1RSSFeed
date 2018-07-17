@@ -3,6 +3,7 @@ package webSiteRepository;
 import core.Core;
 import core.Service;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,20 +21,22 @@ public class WebSiteRepository extends Service
 	}
 
 	public void addWebSite(NewsWebPageModel newsWebPageModel) {
-		try {
+		try(Connection conn = core.getDatabaseConnectionPool().getConnection()) {
 				ResultSet resultSet =
 						core.getDatabaseConnectionPool().executeQuery(
-								WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(), newsWebPageModel.getLink());
+								conn, WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(), newsWebPageModel.getLink());
 
 				resultSet.beforeFirst();
 				if (!resultSet.next()) {
 					core.getDatabaseConnectionPool().execute(
+							conn,
 							WebsiteTableQueries.INSERT_INTO_TABLE.toString(),
 							newsWebPageModel.getLink(),
 							newsWebPageModel.getTargetClass(),
 							newsWebPageModel.getDatePattern());
 				} else {
 					core.getDatabaseConnectionPool().execute(
+							conn,
 							WebsiteTableQueries.UPDATE_TARGET_CLASS_BY_LINK.toString(),
 							newsWebPageModel.getTargetClass(),
 							newsWebPageModel.getDatePattern(),
@@ -51,9 +54,9 @@ public class WebSiteRepository extends Service
 			return webPageInformationHashMap.get(websiteLink);
 		} else {
 			NewsWebPageModel newsWebPageModel = null;
-			try {
+			try(Connection conn = core.getDatabaseConnectionPool().getConnection()) {
 				ResultSet resultSet =
-						core.getDatabaseConnectionPool().executeQuery(WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(), websiteLink);
+						core.getDatabaseConnectionPool().executeQuery(conn, WebsiteTableQueries.SELECT_WEBSITE_BY_LINK.toString(), websiteLink);
 				resultSet.first();
 				newsWebPageModel = new NewsWebPageModel(resultSet);
 				webPageInformationHashMap.put(websiteLink, newsWebPageModel);
@@ -66,10 +69,10 @@ public class WebSiteRepository extends Service
 	}
 
 	public List<NewsWebPageModel> getWebsites() {
-    System.out.println("hello");
 		ArrayList<NewsWebPageModel> ans = null;
-		try {
-			ResultSet resultSet = core.getDatabaseConnectionPool().executeQuery(WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
+		try(Connection conn = core.getDatabaseConnectionPool().getConnection()) {
+			ResultSet resultSet = core.getDatabaseConnectionPool().
+					executeQuery(conn, WebsiteTableQueries.SELECT_ALL_WEBSITES.toString());
 			ans = new ArrayList<>();
 			resultSet.beforeFirst();
 			while (resultSet.next()) {
