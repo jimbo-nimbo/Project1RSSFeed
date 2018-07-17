@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class NewsWebPageModel {
+  private int id;
   private String link;
   private String targetClass;
   private String datePattern;
@@ -20,7 +21,8 @@ public class NewsWebPageModel {
 
   public NewsWebPageModel(ResultSet resultSet) {
     try {
-      link = resultSet.getString("url");
+      id = resultSet.getInt("WID");
+      link = resultSet.getString("link");
       targetClass = resultSet.getString("class");
       datePattern = resultSet.getString("datePattern");
     } catch (SQLException e) {
@@ -29,16 +31,19 @@ public class NewsWebPageModel {
     fetchTitleAndDescription();
   }
 
+  /**
+   *
+   * id is null first
+   * @param link
+   * @param targetClass
+   * @param dataPattern
+   */
   public NewsWebPageModel(String link, String targetClass, String dataPattern) {
     this.link = link;
     this.targetClass = targetClass;
     this.datePattern = dataPattern;
 
     fetchTitleAndDescription();
-  }
-
-  public String getDatePattern() {
-    return datePattern;
   }
 
   private void fetchTitleAndDescription() {
@@ -81,6 +86,10 @@ public class NewsWebPageModel {
     } catch (IOException e) {
       System.out.println("website " + getLink() + " not updated!!!");
     }
+  }
+
+  public String getDatePattern() {
+    return datePattern;
   }
 
   public String getTitle() {

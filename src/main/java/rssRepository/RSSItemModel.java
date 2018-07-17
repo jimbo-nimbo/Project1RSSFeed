@@ -19,7 +19,7 @@ public class RSSItemModel {
   private String link;
   private String article;
   private String dateString;
-  private String newsWebPage;
+  private int id;
   private Date date;
 
   private NewsWebPageModel newsWebPageModel;
@@ -30,9 +30,8 @@ public class RSSItemModel {
    * @param resultSet
    * @param newsWebPageModel
    */
-  public RSSItemModel(ResultSet resultSet,  NewsWebPageModel newsWebPageModel) {
+  public RSSItemModel(ResultSet resultSet, NewsWebPageModel newsWebPageModel) {
     this.newsWebPageModel = newsWebPageModel;
-    newsWebPage = newsWebPageModel.getLink();
 
     try {
       title = resultSet.getString("title");
@@ -65,15 +64,13 @@ public class RSSItemModel {
     this.link = link;
     this.dateString = dateString;
     this.newsWebPageModel = newsWebPageModel;
-    newsWebPage = newsWebPageModel.getLink();
 
     parseDate();
     fetch();
   }
 
   private void parseDate() {
-    SimpleDateFormat simpleDateFormat =
-        new SimpleDateFormat(newsWebPageModel.getDatePattern());
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageModel.getDatePattern());
     try {
       date = simpleDateFormat.parse(dateString);
     } catch (ParseException e) {
@@ -132,10 +129,6 @@ public class RSSItemModel {
     this.dateString = dateString;
   }
 
-  public String getNewsWebPage() {
-    return newsWebPage;
-  }
-
   @Override
   public String toString() {
     return "RSSItemModel{"
@@ -155,7 +148,7 @@ public class RSSItemModel {
         + dateString
         + '\''
         + ", newsWebPageModel="
-        + newsWebPageModel
+        + newsWebPageModel.toString()
         + '}';
   }
 }

@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RssItemRepository extends Service
-{
+public class RssItemRepository extends Service {
   private static DatabaseConnectionPool databaseConnectionPool;
   private HashMap<String, RSSItemModel> rssItemModelHashMap;
   private static WebSiteRepository webSiteRepository;
@@ -34,8 +33,10 @@ public class RssItemRepository extends Service
     try (Connection conn = databaseConnectionPool.getConnection()) {
       ResultSet resultSet =
           core.getDatabaseConnectionPool()
-              .executeQuery(conn,
-                  RSSItemTableQueries.SELECT_RSS_ITEM_BY_LINK.toString(), rssItemModel.getLink());
+              .executeQuery(
+                  conn,
+                  RSSItemTableQueries.SELECT_RSS_ITEM_BY_LINK.toString(),
+                  rssItemModel.getLink());
 
       resultSet.beforeFirst();
       if (!resultSet.next()) {
@@ -58,16 +59,18 @@ public class RssItemRepository extends Service
   public List<RSSItemModel> getAllRSSData() {
     ArrayList<RSSItemModel> ans = new ArrayList<>();
 
-    try(Connection conn = core.getDatabaseConnectionPool().getConnection()) {
-      ResultSet resultSet = databaseConnectionPool.executeQuery(conn,
-              RSSItemTableQueries.SELECT_ALL_RSS_ITEMS.toString());
+    try (Connection conn = core.getDatabaseConnectionPool().getConnection()) {
+      ResultSet resultSet =
+          databaseConnectionPool.executeQuery(
+              conn, RSSItemTableQueries.SELECT_ALL_RSS_ITEMS.toString());
 
       resultSet.beforeFirst();
       while (resultSet.next()) {
         if (rssItemModelHashMap.containsKey(resultSet.getString("link"))) {
           ans.add(rssItemModelHashMap.get(resultSet.getString("link")));
         } else {
-          NewsWebPageModel webPageModel = webSiteRepository.getWebsite(resultSet.getString("newsWebPage"));
+          NewsWebPageModel webPageModel =
+              webSiteRepository.getWebsite(resultSet.getString("newsWebPage"));
 
           RSSItemModel rssItemModel = new RSSItemModel(resultSet, webPageModel);
           ans.add(rssItemModel);
@@ -83,13 +86,15 @@ public class RssItemRepository extends Service
 
   public List<RSSItemModel> getRSSDataFromWebSite(String webPageLink) {
     ArrayList<RSSItemModel> ans = new ArrayList<>();
-    try(Connection conn = core.getDatabaseConnectionPool().getConnection()) {
+    try (Connection conn = core.getDatabaseConnectionPool().getConnection()) {
       ResultSet resultSet =
           databaseConnectionPool.executeQuery(
-                  conn,
-              RSSItemTableQueries.SELECT_FROM_RSSITEM_BY_NEWSPAGE_LINK.toString(), webPageLink);
+              conn,
+              RSSItemTableQueries.SELECT_FROM_RSSITEM_BY_NEWSPAGE_LINK.toString(),
+              webPageLink);
       resultSet.first();
-      NewsWebPageModel webPageModel = webSiteRepository.getWebsite(resultSet.getString("newsWebPage"));
+      NewsWebPageModel webPageModel =
+          webSiteRepository.getWebsite(resultSet.getString("newsWebPage"));
       resultSet.beforeFirst();
       while (resultSet.next()) {
         System.out.println(resultSet.getString("newsWebPage"));
@@ -107,32 +112,19 @@ public class RssItemRepository extends Service
     return ans;
   }
 
-  public String getArticle(String link) {
-    try (Connection conn = core.getDatabaseConnectionPool().getConnection()){
-      ResultSet resultSet =
-          databaseConnectionPool.executeQuery(conn ,RSSItemTableQueries.SELECT_RSS_ITEM_BY_LINK.toString(), link);
-
-      resultSet.beforeFirst();
-      if (resultSet.next()) {
-        return resultSet.getString("article");
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
 
   public RSSItemModel getRSSItem(String link) {
     if (rssItemModelHashMap.containsKey(link)) {
       return rssItemModelHashMap.get(link);
     } else {
       RSSItemModel rssItemModel = null;
-      try (Connection conn = core.getDatabaseConnectionPool().getConnection()){
+      try (Connection conn = core.getDatabaseConnectionPool().getConnection()) {
         ResultSet resultSet =
-            databaseConnectionPool.executeQuery(conn,
-                    RSSItemTableQueries.SELECT_RSS_ITEM_BY_LINK.toString(), link);
-        rssItemModel = new RSSItemModel(resultSet,
-                webSiteRepository.getWebsite(resultSet.getString("newsWebPage")));
+            databaseConnectionPool.executeQuery(
+                conn, RSSItemTableQueries.SELECT_RSS_ITEM_BY_LINK.toString(), link);
+        rssItemModel =
+            new RSSItemModel(
+                resultSet, webSiteRepository.getWebsite(resultSet.getString("newsWebPage")));
         rssItemModelHashMap.put(link, rssItemModel);
       } catch (SQLException e) {
         e.printStackTrace();
@@ -140,24 +132,25 @@ public class RssItemRepository extends Service
       return rssItemModel;
     }
   }
-	public List<RSSItemModel> takeRssItemFromResultSetWithHashCheck(ResultSet resultSet) {
-		List<RSSItemModel> ans = new ArrayList<>();
-		try {
-			resultSet.beforeFirst();
-			while (resultSet.next()) {
-				if (rssItemModelHashMap.containsKey(resultSet.getString("link"))) {
-					ans.add(rssItemModelHashMap.get(resultSet.getString("link")));
-				} else {
-					RSSItemModel rssItemModel =
-							new RSSItemModel(resultSet,
-                                    webSiteRepository.getWebsite(resultSet.getString("newsWebPage")));
-					rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
-					ans.add(rssItemModel);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return ans;
-	}
+
+  public List<RSSItemModel> takeRssItemFromResultSetWithHashCheck(ResultSet resultSet) {
+    List<RSSItemModel> ans = new ArrayList<>();
+    try {
+      resultSet.beforeFirst();
+      while (resultSet.next()) {
+        if (rssItemModelHashMap.containsKey(resultSet.getString("link"))) {
+          ans.add(rssItemModelHashMap.get(resultSet.getString("link")));
+        } else {
+          RSSItemModel rssItemModel =
+              new RSSItemModel(
+                  resultSet, webSiteRepository.getWebsite(resultSet.getString("newsWebPage")));
+          rssItemModelHashMap.put(rssItemModel.getLink(), rssItemModel);
+          ans.add(rssItemModel);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return ans;
+  }
 }

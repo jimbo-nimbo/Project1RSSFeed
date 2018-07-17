@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class RssService extends Service
-{
+public class RssService extends Service {
 
   private static final int THREAD_NUM = 20;
   private static RssService rssService = null;
@@ -19,11 +18,11 @@ public class RssService extends Service
   private ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUM);
 
   public RssService(Core core) {
-  	super(core);
-  	databaseConnectionPool = core.getDatabaseConnectionPool();
+    super(core);
+    databaseConnectionPool = core.getDatabaseConnectionPool();
     ScheduledExecutorService scheduledExecutorService =
         Executors.newSingleThreadScheduledExecutor();
-    scheduledExecutorService.scheduleAtFixedRate(() -> updateDataBase(),0 , 100, TimeUnit.SECONDS);
+    scheduledExecutorService.scheduleAtFixedRate(() -> updateDataBase(), 0, 100, TimeUnit.SECONDS);
   }
 
   public void updateSite(NewsWebPageModel newsWebPageModel) {
@@ -35,8 +34,8 @@ public class RssService extends Service
       throws InterruptedException {
     Runnable addWebsite =
         () -> {
-          core.getWebSiteRepository().addWebSite(
-              new NewsWebPageModel(websiteLink, targetClass, datePattern));
+          core.getWebSiteRepository()
+              .addWebSite(new NewsWebPageModel(websiteLink, targetClass, datePattern));
         };
     executor.execute(addWebsite);
   }
@@ -89,7 +88,8 @@ public class RssService extends Service
   }
 
   public Future<List<RSSItemModel>> getWebSiteRssData(String webPageLink) {
-    Callable<List<RSSItemModel>> callableList = () -> core.getRssRepository().getRSSDataFromWebSite(webPageLink);
+    Callable<List<RSSItemModel>> callableList =
+        () -> core.getRssRepository().getRSSDataFromWebSite(webPageLink);
     Future<List<RSSItemModel>> future = executor.submit(callableList);
     return future;
   }
