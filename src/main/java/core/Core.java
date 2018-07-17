@@ -7,6 +7,15 @@ import rssRepository.RssItemRepository;
 import searchEngine.SearchEngine;
 import webSiteRepository.WebSiteRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
 public class Core
 {
 	private static Core core;
@@ -16,9 +25,22 @@ public class Core
 	private SearchEngine searchEngine;
 	private DateEngine dateEngine;
 	private RssService rssService;
+	Logger logger = Logger.getLogger("MyLog");
+	FileHandler fileHandler;
+	Path path = Paths.get("logFile.log");
+
 
 	private Core()
 	{
+		try {
+			fileHandler = new FileHandler("LogFile.log");
+			logger.addHandler(fileHandler);
+			SimpleFormatter formatter = new SimpleFormatter();
+			fileHandler.setFormatter(formatter);
+			logger.setUseParentHandlers(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		databaseConnectionPool = new DatabaseConnectionPool(this);
 		rssRepository = new RssItemRepository(this);
 		webSiteRepository = new WebSiteRepository(this);
@@ -89,5 +111,13 @@ public class Core
 	public DateEngine getDateEngine()
 	{
 		return dateEngine;
+	}
+
+	synchronized public void logToFile(String s){
+		try{
+			logger.info(s);
+		} catch (Exception e){
+			//
+		}
 	}
 }
