@@ -1,5 +1,7 @@
 package database;
 
+import core.Core;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +34,7 @@ public class DataBaseConfig {
         try {
           input.close();
         } catch (IOException e) {
-          e.printStackTrace();
+          Core.getInstance().logToFile(e.getMessage());
         }
       }
     }

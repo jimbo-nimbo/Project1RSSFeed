@@ -1,8 +1,10 @@
 package core;
 
+import cli.Cli;
 import cli.RssService;
 import database.DatabaseConnectionPool;
 import dateEngine.DateEngine;
+import org.slf4j.LoggerFactory;
 import rssRepository.RssItemRepository;
 import searchEngine.SearchEngine;
 import webSiteRepository.WebSiteRepository;
@@ -22,20 +24,23 @@ public class Core {
   private SearchEngine searchEngine;
   private DateEngine dateEngine;
   private RssService rssService;
-
-  Logger logger = Logger.getLogger("MyLog");
-  FileHandler fileHandler;
+  private static org.slf4j.Logger logger = LoggerFactory.getLogger(Cli.class);
+//  Logger logger = Logger.getLogger("MyLog");
+//  FileHandler fileHandler;
 
   private Core() {
-    try {
-      fileHandler = new FileHandler("LogFile.log");
-      logger.addHandler(fileHandler);
-      SimpleFormatter formatter = new SimpleFormatter();
-      fileHandler.setFormatter(formatter);
-      logger.setUseParentHandlers(false);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      fileHandler = new FileHandler("LogFile.log");
+//      logger.addHandler(fileHandler);
+//      SimpleFormatter formatter = new SimpleFormatter();
+//      fileHandler.setFormatter(formatter);
+//      logger.setUseParentHandlers(false);
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+
+    logToFile("test Logger");
+
 
     databaseConnectionPool = new DatabaseConnectionPool(this);
     webSiteRepository = new WebSiteRepository(this);
@@ -100,7 +105,7 @@ public class Core {
 
   public synchronized void logToFile(String s) {
     try {
-      logger.info(s);
+      logger.debug(s);
     } catch (Exception e) {
       //
     }

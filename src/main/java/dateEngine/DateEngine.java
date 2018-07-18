@@ -39,7 +39,7 @@ public class DateEngine extends Service
             return rssItemRepository.convertResultSetToListOfRssModel(resultSet);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            core.logToFile(e.getMessage());
         }
         return null;
     }
@@ -58,7 +58,7 @@ public class DateEngine extends Service
             return rssItemRepository.convertResultSetToListOfRssModel(resultSet);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            core.logToFile(e.getMessage());
         }
         return null;
     }

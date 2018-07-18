@@ -1,5 +1,7 @@
 package webSiteRepository;
 
+import core.Core;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +25,7 @@ public class DatePatterns
 			this.patterns = new ArrayList<>(Arrays.asList(patterns));
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Core.getInstance().logToFile(e.toString());
 		}
 	}
 

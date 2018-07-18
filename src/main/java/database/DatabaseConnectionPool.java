@@ -35,7 +35,7 @@ public class DatabaseConnectionPool extends Service {
       comboPooledDataSource.setMaxStatementsPerConnection(50);
       comboPooledDataSource.setAutoCommitOnClose(true);
     } catch (PropertyVetoException e) {
-      e.printStackTrace();
+      core.logToFile(e.getMessage());
     }
 
     try (Connection connection = getConnection()) {
@@ -52,7 +52,7 @@ public class DatabaseConnectionPool extends Service {
           .createStatement()
           .execute(RSSItemTableQueries.CREATE_RSSITEM_TABLE_IF_NOT_EXISTS.toString());
     } catch (SQLException e) {
-      e.printStackTrace();
+      core.logToFile(e.getMessage());
     }
     core.setDatabaseConnectionPool(this);
   }
@@ -63,7 +63,7 @@ public class DatabaseConnectionPool extends Service {
       connection.createStatement().execute("USE " + dataBaseConfig.getDbName() + ";");
       return connection;
     } catch (SQLException e) {
-      e.printStackTrace();
+      core.logToFile(e.getMessage());
     }
     return null;
   }

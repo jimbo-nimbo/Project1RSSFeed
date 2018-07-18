@@ -56,7 +56,7 @@ public class RssService extends Service {
             try {
               future.get();
             } catch (InterruptedException | ExecutionException e) {
-              e.printStackTrace();
+              core.logToFile(e.getMessage());
             }
           }
           System.out.println("update completed!");
@@ -79,7 +79,7 @@ public class RssService extends Service {
             future.get();
             System.out.println("website " + webSiteLink + " updated!");
           } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            core.logToFile(e.toString());
           }
         };
 

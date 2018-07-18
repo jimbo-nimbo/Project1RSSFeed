@@ -33,7 +33,7 @@ public class NewsWebPageModel {
       targetClass = resultSet.getString("class");
       datePattern = resultSet.getString("datePattern");
     } catch (SQLException e) {
-      e.printStackTrace();
+      Core.getInstance().logToFile(e.getMessage());
     }
   }
 
