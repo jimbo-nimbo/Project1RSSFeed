@@ -40,6 +40,7 @@ public class RSSItemModel {
       link = resultSet.getString("link");
       date = resultSet.getTimestamp("pubDate");
       article = resultSet.getString("article");
+      id = resultSet.getInt("RID");
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -65,6 +66,7 @@ public class RSSItemModel {
     this.link = link;
     this.dateString = dateString;
     this.newsWebPageModel = newsWebPageModel;
+    this.id = -1;
 
     parseDate();
     fetch();

@@ -78,7 +78,7 @@ public class RssItemRepository extends Service
      */
     public void addRSSItem(RSSItemModel rssItemModel)
     {
-        if (linkRssModelMap.containsKey(rssItemModel.getId()))
+        if (rssItemModel.getId() != -1 && linkRssModelMap.containsKey(rssItemModel.getId()))
             return;
 
         linkRssModelMap.put(rssItemModel.getId(), rssItemModel);
