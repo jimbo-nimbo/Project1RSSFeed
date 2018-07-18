@@ -54,7 +54,6 @@ public class DatabaseConnectionPool extends Service {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
     core.setDatabaseConnectionPool(this);
   }
 

@@ -19,22 +19,33 @@ public class RssItemRepositoryTest {
   SearchEngine searchEngine = Core.getInstance().getSearchEngine();
 
   @Before
-  public void setUp() throws Exception {}
+  public void setUp() throws Exception {
+
+  }
 
   @After
   public void tearDown() throws Exception {}
 
   @Test
-  public void addRSSItem() {}
+  public void addRSSItem() {
+    String link = "http://www.tabnak.ir/fa/news/817425/۵-کشته-و-مصدوم-در-تصادف-خونین-در-اردبیل";
+    String title = "testlink";
+    String description = "testlink";
+    String time = "17 Jul 2018 22:15:01 +0430";
+    String url = "http://www.tabnak.ir/fa/rss/allnews";
+    NewsWebPageModel newsWebPageModel = webSiteRepository.getWebsite(url);
+    RSSItemModel rssItemModel = new RSSItemModel(title, description, link, time, newsWebPageModel);
+    rssItemRepository.addRSSItem(rssItemModel);
+  }
 
   @Test
   public void getAllRSSDataTest() {
     System.out.println(rssItemRepository.getAllRSSData());
   }
   @Test
-  public void getAllRSSData() {
+  public void getRSSData() {
     NewsWebPageModel newsWebPageModel =
-            webSiteRepository.getWebsite("http://www.irinn.ir/fa/rss/allnews");
+            webSiteRepository.getWebsite("https://www.isna.ir/rss");
     newsWebPageModel.update();
     ArrayList<RSSItemModel> ans = (ArrayList<RSSItemModel>) rssItemRepository.getAllRSSData();
     for (RSSItemModel rssItemModel : ans) {
@@ -44,12 +55,15 @@ public class RssItemRepositoryTest {
 
   @Test
   public void updateRSSItemsTest() {
-    webSiteRepository.getWebsites().get(1).update();
+    //webSiteRepository.getWebsites().get(1).update();
   }
 
 
   @Test
-  public void getRSSItem() {}
+  public void getRSSItemByID() {
+
+      System.out.println(Core.getInstance().getRssRepository().getRSSItem(1).toString());
+  }
 
   @Test
   public void takeRssItemFromResultSetWithHashCheck() {}

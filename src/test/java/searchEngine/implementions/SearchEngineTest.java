@@ -5,20 +5,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import rssRepository.RSSItemModel;
+import rssRepository.SearchInjectQuery;
 import searchEngine.SearchEngine;
+import webSiteRepository.NewsWebPageModel;
+import webSiteRepository.WebSiteRepository;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class SearchEngineTest {
-  String INJECT_DATA_TO_RSS_ITEM =
+  String INJECT_DATA_TO_RSS_ITEM = (
       "INSERT  INTO RssItem "
-          + "(title, description, link, pubDate, article, newsWebPage) VALUES "
-          + "(?, ?, ?, ?, ?, (SELECT (url) FROM WebSite WHERE url LIKE ?));";
-  String DELETE_DATA_FROM_RSS_ITEM = "DELETE FROM RssItem " + "WHERE link = ?;";
+              + "(title, description, link, pubDate, article, WID) VALUES "
+              + "(?, ?, ?, ?, ?, (SELECT (WID) FROM WebSite WHERE link LIKE ?));");
+  String DELETE_DATA_FROM_RSS_ITEM = ("DELETE FROM RssItem " + "WHERE link = ?;");
+
+  Core core = Core.getInstance();
   private SearchEngine searchEngine = Core.getInstance().getSearchEngine();
 
   @Before
@@ -31,6 +33,7 @@ public class SearchEngineTest {
     try (Connection conn = Core.getInstance().getDatabaseConnectionPool().getConnection()) {
       PreparedStatement preparedStatement = conn.prepareStatement(DELETE_DATA_FROM_RSS_ITEM);
       preparedStatement.setString(1, "testLink");
+      preparedStatement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -42,10 +45,21 @@ public class SearchEngineTest {
     String description = "describtion";
     String link = "testLink";
     String article = "helloTestblahblah";
-    Date pubDate = new Date(System.currentTimeMillis());
-    String newsWebPage = "http://www.irinn.ir/fa/rss/allnews";
-    //        DataBase.getInstance().execute(rssRepository.SearchInjectQuery.INJECT_DATA_TO_RSS_ITEM.toString(),
-    // title, description, link, pubDate, article, newsWebPage);
+    Timestamp pubDate = new Timestamp(System.currentTimeMillis());
+    String newsWebPage = "https://www.isna.ir/rss";
+    try(Connection conn = Core.getInstance().getDatabaseConnectionPool().getConnection()) {
+      PreparedStatement stmnt = conn.prepareStatement(SearchInjectQuery.INJECT_DATA_TO_RSS_ITEM.toString());
+      stmnt.setString(1, title);
+      stmnt.setString(2, description);
+      stmnt.setString(3, link);
+      stmnt.setTimestamp(4, pubDate);
+      stmnt.setString(5, article);
+      stmnt.setString(6, newsWebPage);
+      stmnt.execute();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
 
   }
 

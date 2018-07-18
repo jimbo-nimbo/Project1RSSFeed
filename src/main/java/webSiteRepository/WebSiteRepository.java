@@ -74,7 +74,6 @@ public class WebSiteRepository extends Service
                 resultSet.beforeFirst();
                 if (!resultSet.next())
                     return null;
-
                 resultSet.first();
                 NewsWebPageModel newsWebPageModel = new NewsWebPageModel(resultSet);
                 webPageInformationHashMap.put(id, newsWebPageModel);

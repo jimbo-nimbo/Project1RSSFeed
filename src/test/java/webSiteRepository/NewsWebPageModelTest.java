@@ -11,6 +11,6 @@ public class NewsWebPageModelTest
 	{
 		NewsWebPageModel n = new NewsWebPageModel("http://www.irna.ir/en/rss.aspx?kind=-1&area=0",
 				"bodytext");
-    System.out.println(n);
+    	System.out.println(n);
 	}
 }

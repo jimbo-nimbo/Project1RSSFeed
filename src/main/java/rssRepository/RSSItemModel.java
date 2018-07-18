@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class RSSItemModel {
   private String article;
   private String dateString;
   private int id;
-  private Date date;
+  private Timestamp date;
 
   private NewsWebPageModel newsWebPageModel;
 
@@ -37,7 +38,7 @@ public class RSSItemModel {
       title = resultSet.getString("title");
       description = resultSet.getString("description");
       link = resultSet.getString("link");
-      date = resultSet.getDate("pubDate");
+      date = resultSet.getTimestamp("pubDate");
       article = resultSet.getString("article");
     } catch (SQLException e) {
       e.printStackTrace();
@@ -77,7 +78,8 @@ public class RSSItemModel {
   private void parseDate() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(newsWebPageModel.getDatePattern());
     try {
-      date = simpleDateFormat.parse(dateString);
+      Long time = simpleDateFormat.parse(dateString).getTime();
+      date = new Timestamp(time);
     } catch (ParseException e) {
       e.printStackTrace();
     }

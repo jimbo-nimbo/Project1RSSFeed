@@ -58,10 +58,12 @@ public class RssItemRepository extends Service
                         conn.prepareStatement(RSSItemTableQueries.SELECT_RSS_ITEM_BY_ID.toString());
                 preparedStatement.setInt(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
-
-                RSSItemModel rssItemModel = new RSSItemModel(resultSet,
-                        webSiteRepository.getWebsite(resultSet.getInt("WID")));
+                resultSet.first();
+                int wid = resultSet.getInt("WID");
+                NewsWebPageModel newsWebPageModel = webSiteRepository.getWebsite(wid);
+                RSSItemModel rssItemModel = new RSSItemModel(resultSet, newsWebPageModel);
                 linkRssModelMap.put(id, rssItemModel);
+                return rssItemModel;
             } catch (SQLException e)
             {
                 e.printStackTrace();

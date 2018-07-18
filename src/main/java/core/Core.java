@@ -25,7 +25,6 @@ public class Core {
 
   Logger logger = Logger.getLogger("MyLog");
   FileHandler fileHandler;
-  Path path = Paths.get("logFile.log");
 
   private Core() {
     try {
@@ -39,8 +38,8 @@ public class Core {
     }
 
     databaseConnectionPool = new DatabaseConnectionPool(this);
-    rssRepository = new RssItemRepository(this);
     webSiteRepository = new WebSiteRepository(this);
+    rssRepository = new RssItemRepository(this);
     searchEngine = new SearchEngine(this);
     dateEngine = new DateEngine(this);
     rssService = new RssService(this);

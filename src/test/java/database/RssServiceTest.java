@@ -1,4 +1,4 @@
-package database.implementation;
+package database;
 
 import cli.RssService;
 import core.Core;

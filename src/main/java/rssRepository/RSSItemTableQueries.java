@@ -21,7 +21,7 @@ public enum RSSItemTableQueries
                     + "(?, ?, ?, ?, ?, (SELECT (WID) FROM WebSite WHERE WID = ?));"),
     SELECT_RSS_ITEM_BY_LINK("SELECT * FROM RssItem WHERE link = ?;"),
     SELECT_RSS_ITEM_BY_ID("SELECT * FROM RssItem WHERE RID = ?;"),
-    SELECT_ALL_RSS_FROM_WEBSITE_BY_WID("SELECT * FROM RssItem WHERE WID = ?"),
+    SELECT_ALL_RSS_FROM_WEBSITE_BY_WID("SELECT * FROM RssItem WHERE WID = ?;"),
     SELECT_ALL_RSS_ITEMS("SELECT * FROM RssItem;"),
     DROP_RSS_ITEM("DROP TABLE RssItem;");
 
