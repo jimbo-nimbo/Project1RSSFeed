@@ -2,105 +2,113 @@ package cli;
 
 import core.Core;
 import core.Service;
-import database.DatabaseConnectionPool;
+import dateEngine.DateEngine;
 import rssRepository.RSSItemModel;
+import rssRepository.RssItemRepository;
+import searchEngine.SearchEngine;
 import webSiteRepository.NewsWebPageModel;
+import webSiteRepository.WebSiteRepository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class RssService extends Service {
+public class RssService extends Service
+{
 
-  private static final int THREAD_NUM = 20;
-  private static RssService rssService = null;
-  private DatabaseConnectionPool databaseConnectionPool;
-  private ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUM);
+    private static final int THREAD_NUM = 20;
+    private ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUM);
 
-  public RssService(Core core) {
-    super(core);
-    databaseConnectionPool = core.getDatabaseConnectionPool();
-    ScheduledExecutorService scheduledExecutorService =
-        Executors.newSingleThreadScheduledExecutor();
-    scheduledExecutorService.scheduleAtFixedRate(() -> updateDataBase(), 0, 100, TimeUnit.SECONDS);
-  }
+    private WebSiteRepository webSiteRepository;
+    private RssItemRepository rssItemRepository;
+    private DateEngine dateEngine;
+    private SearchEngine searchEngine;
 
-  public void updateSite(NewsWebPageModel newsWebPageModel) {
-    Runnable siteUpdate = newsWebPageModel::update;
-    executor.execute(siteUpdate);
-  }
+    public RssService(Core core)
+    {
+        super(core);
+        webSiteRepository = core.getWebSiteRepository();
+        rssItemRepository = core.getRssRepository();
+        dateEngine = core.getDateEngine();
+        searchEngine = core.getSearchEngine();
 
-  public void addWebSite(String websiteLink, String targetClass)
-      throws InterruptedException {
-    Runnable addWebsite =
-        () -> {
-          core.getWebSiteRepository()
-              .addWebSite(websiteLink, targetClass);
-        };
-    executor.execute(addWebsite);
-  }
+        ScheduledExecutorService scheduledExecutorService =
+                Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(this::updateAllWebsites, 0, 100, TimeUnit.SECONDS);
+    }
 
-  public Future<List<NewsWebPageModel>> getWebSites() {
-    Callable<List<NewsWebPageModel>> getWebsites = () -> core.getWebSiteRepository().getWebsites();
-    Future<List<NewsWebPageModel>> websites = executor.submit(getWebsites);
-    return websites;
-  }
+    public CompletableFuture<Void> addWebSite(String websiteLink, String targetClass)
+    {
+        return CompletableFuture.runAsync(() -> webSiteRepository.addWebSite(websiteLink, targetClass), executor);
+    }
 
-  public void updateDataBase() {
-    List<Future<Boolean>> futures = new ArrayList<>();
-    for (NewsWebPageModel newsWebPageModel : core.getWebSiteRepository().getWebsites())
-      futures.add(updateDatabaseForWebsite(newsWebPageModel.getLink()));
-    executor.submit(
-        () -> {
-          for (Future future : futures) {
-            try {
-              future.get();
-            } catch (InterruptedException | ExecutionException e) {
-              core.logToFile(e.getMessage());
-            }
-          }
-          System.out.println("update completed!");
-        });
-  }
+    public CompletableFuture<List<NewsWebPageModel>> getWebSites()
+    {
+        return CompletableFuture.supplyAsync(() -> webSiteRepository.getWebsites(),
+                executor);
+    }
 
-  public Future<Boolean> updateDatabaseForWebsite(String webSiteLink) {
-    Callable<Boolean> callable =
-        () -> {
-          System.out.println("updating " + webSiteLink + "....");
-          core.getWebSiteRepository().getWebsite(webSiteLink).update();
-          return true;
-        };
+    public CompletableFuture<Void> updateWebsite(String webSiteLink)
+    {
+        return CompletableFuture.runAsync(() -> webSiteRepository.getWebsite(webSiteLink).update(), executor);
+    }
 
-    Future<Boolean> future = executor.submit(callable);
+    public List<CompletableFuture<Void>> updateAllWebsites()
+    {
+        List<CompletableFuture<Void>> list = new ArrayList<>();
+        for (NewsWebPageModel newsWebPageModel : webSiteRepository.getWebsites())
+            list.add(updateWebsite(newsWebPageModel.getLink()));
+        return list;
+    }
 
-    Runnable getNotify =
-        () -> {
-          try {
-            future.get();
-            System.out.println("website " + webSiteLink + " updated!");
-          } catch (InterruptedException | ExecutionException e) {
-            core.logToFile(e.toString());
-          }
-        };
+    public CompletableFuture<List<RSSItemModel>> getWebSiteRssData(String webPageLink)
+    {
+        return CompletableFuture.supplyAsync(() ->rssItemRepository.rssForWebsite(webPageLink), executor);
+    }
 
-    executor.submit(getNotify);
-    return future;
-  }
+    public CompletableFuture<List<RSSItemModel>> getAllRssData()
+    {
+        return CompletableFuture.supplyAsync(() -> rssItemRepository.getAllRSSData(), executor);
+    }
 
-  public Future<List<RSSItemModel>> getWebSiteRssData(String webPageLink) {
-    Callable<List<RSSItemModel>> callableList =
-        () -> core.getRssRepository().rssForWebsite(webPageLink);
-    Future<List<RSSItemModel>> future = executor.submit(callableList);
-    return future;
-  }
+    public CompletableFuture<List<RSSItemModel>> getTodayNewsForWebsite(String link)
+    {
+        return CompletableFuture.supplyAsync(() ->
+                dateEngine.getNewsForWebsiteByDate(link, new Date(System.currentTimeMillis())),executor);
+    }
 
-  public ExecutorService getExecutor() {
-    return executor;
-  }
+    public CompletableFuture<List<RSSItemModel>> getSomeLastNewsForWebsite(String link, int num)
+    {
+        return CompletableFuture.supplyAsync(() ->
+        dateEngine.getSomeLastRssForWebsite(link, num), executor);
+    }
 
-  public Future<List<RSSItemModel>> getAllRssData() {
-    Callable<List<RSSItemModel>> callable = () -> core.getRssRepository().getAllRSSData();
-    Future<List<RSSItemModel>> future = executor.submit(callable);
-    return future;
-  }
+    public CompletableFuture<Integer> getNewsCountForDate(String link, int dayPast)
+    {
+        return CompletableFuture.supplyAsync(() ->
+        dateEngine.getNewsCountForDay(link, dayPast),
+                executor);
+    }
+
+    public CompletableFuture<List<RSSItemModel>> searchInArticles(String text)
+    {
+        return CompletableFuture.supplyAsync(() ->
+        searchEngine.searchArticle(text),
+                executor);
+    }
+
+    public CompletableFuture<List<RSSItemModel>> searchInTitles(String text)
+    {
+        return CompletableFuture.supplyAsync(() ->
+        searchEngine.searchTitle(text),
+                executor);
+    }
+
+    public CompletableFuture<List<RSSItemModel>> searchBoth(String text)
+    {
+        return CompletableFuture.supplyAsync(() ->
+        searchEngine.searchAll(text),
+                executor);
+    }
 }

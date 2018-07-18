@@ -43,11 +43,6 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>info.picocli</groupId>-->
-            <!--<artifactId>picocli</artifactId>-->
-            <!--<version>3.3.0</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -55,5 +50,5 @@
         </dependency>
     </dependencies>
 
-    
+
 </project>

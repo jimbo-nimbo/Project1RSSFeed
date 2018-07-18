@@ -10,57 +10,61 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class Cli {
+public class Cli
+{
 
-  RssService dataBase = Core.getInstance().getRssService();
+    RssService dataBase = Core.getInstance().getRssService();
 
-  public static void main(String[] args) throws IOException {
-    ShellFactory.createConsoleShell("RssProject-Jimbo", "", new Cli()).commandLoop(); // and three.
-  }
-
-  @Command
-  public String getWebSites() {
-    Future<List<NewsWebPageModel>> news = dataBase.getWebSites();
-    StringBuilder myString = new StringBuilder();
-    try {
-      List<NewsWebPageModel> myList = news.get();
-      for (NewsWebPageModel newsWebPageModel : myList) {
-        myString.append(newsWebPageModel.toString() + "\n");
-      }
-    } catch (InterruptedException | ExecutionException e) {
-      myString.append("some problem happen + \n");
-      myString.append(e.getMessage());
+    public static void main(String[] args) throws IOException
+    {
+        ShellFactory.createConsoleShell("RssProject-Jimbo", "", new Cli()).commandLoop(); // and three.
     }
-    return myString.toString();
-  }
 
-  @Command
-  public String addWebSite(String link, String targetClass) {
-    try {
-      dataBase.addWebSite(link, targetClass);
-    } catch (InterruptedException e) {
-      Core.getInstance().logToFile(e.getMessage());
+    @Command
+    public String getWebSites()
+    {
+
+        Future<List<NewsWebPageModel>> news = dataBase.getWebSites();
+        StringBuilder myString = new StringBuilder();
+        try
+        {
+            List<NewsWebPageModel> myList = news.get();
+            for (NewsWebPageModel newsWebPageModel : myList)
+            {
+                myString.append(newsWebPageModel.toString() + "\n");
+            }
+        } catch (InterruptedException | ExecutionException e)
+        {
+            myString.append("some problem happen + \n");
+            myString.append(e.getMessage());
+        }
+        return myString.toString();
     }
-    return "done";
-  }
 
-  @Command
-  public String update(String link) {
-    dataBase.updateDatabaseForWebsite(link);
-    return "done";
-  }
+    @Command
+    public String addWebSite(String link, String targetClass)
+    {
+        return null;
+    }
 
-  @Command
-  public String update() {
-    dataBase.updateDataBase();
-    return "done";
-  }
+    @Command
+    public String update(String link)
+    {
+        return null;
+    }
 
-  @Command
-  public String getLastTen(){
-    return "hi";
-  }
+    @Command
+    public String update()
+    {
+        dataBase.updateAllWebsites();
+        return "done";
+    }
 
+    @Command
+    public String getLastTen()
+    {
+        return "hi";
+    }
 
 
 }

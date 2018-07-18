@@ -102,7 +102,7 @@ public class NewsWebPageModel {
                     this));
       }
     } catch (IOException e) {
-      System.out.println("website " + getLink() + " not updated!!!");
+        e.printStackTrace();
     }
   }
 
