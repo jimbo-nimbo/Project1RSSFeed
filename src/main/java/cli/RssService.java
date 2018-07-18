@@ -16,13 +16,13 @@ public class RssService extends Service {
   private static RssService rssService = null;
   private DatabaseConnectionPool databaseConnectionPool;
   private ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUM);
-//TODO Unhide
+
   public RssService(Core core) {
     super(core);
     databaseConnectionPool = core.getDatabaseConnectionPool();
-    //ScheduledExecutorService scheduledExecutorService =
-//        Executors.newSingleThreadScheduledExecutor();
-    //scheduledExecutorService.scheduleAtFixedRate(() -> updateDataBase(), 0, 100, TimeUnit.SECONDS);
+    ScheduledExecutorService scheduledExecutorService =
+        Executors.newSingleThreadScheduledExecutor();
+    scheduledExecutorService.scheduleAtFixedRate(() -> updateDataBase(), 0, 100, TimeUnit.SECONDS);
   }
 
   public void updateSite(NewsWebPageModel newsWebPageModel) {

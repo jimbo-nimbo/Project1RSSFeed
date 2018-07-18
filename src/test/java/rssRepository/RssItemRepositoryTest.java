@@ -40,7 +40,10 @@ public class RssItemRepositoryTest {
 
   @Test
   public void getAllRSSDataTest() {
-    System.out.println(rssItemRepository.getAllRSSData());
+    ArrayList<RSSItemModel> rssItemModels = (ArrayList<RSSItemModel>) rssItemRepository.getAllRSSData();
+    for(RSSItemModel rssItemModel : rssItemModels){
+      System.out.println(rssItemModel.toString());
+    }
   }
   @Test
   public void getRSSData() {
