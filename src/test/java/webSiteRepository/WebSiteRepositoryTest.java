@@ -24,7 +24,6 @@ public class WebSiteRepositoryTest {
   @Test
   public void addWebSite() {
     webSiteRepository.addWebSite("https://www.isna.ir/rss", "item-text");
-
     webSiteRepository.addWebSite("http://www.tabnak.ir/fa/rss/allnews", "item-text");
     webSiteRepository.addWebSite("http://www.irna.ir/en/rss.aspx?kind=-1&area=0", "bodytext");
     webSiteRepository.addWebSite("https://www.yjc.ir/fa/rss/allnews", "body");
