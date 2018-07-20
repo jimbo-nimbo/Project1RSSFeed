@@ -22,7 +22,7 @@ public class SearchEngine extends Service
         core.setSearchEngine(this);
     }
 
-    public List<RSSItemModel> searchTitle(String context)
+    public List<RSSItemModel> searchTitle(String context) throws SQLException
     {
         context = "%" + context + "%";
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
@@ -34,12 +34,12 @@ public class SearchEngine extends Service
             return rssItemRepository.convertResultSetToListOfRssModel(resultSet);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
-    public List<RSSItemModel> searchArticle(String context)
+    public List<RSSItemModel> searchArticle(String context) throws SQLException
     {
         context = "%" + context + "%";
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
@@ -51,12 +51,12 @@ public class SearchEngine extends Service
             return rssItemRepository.convertResultSetToListOfRssModel(resultSet);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
-    public List<RSSItemModel> searchAll(String context)
+    public List<RSSItemModel> searchAll(String context) throws SQLException
     {
         context = "%" + context + "%";
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
@@ -69,8 +69,8 @@ public class SearchEngine extends Service
             return rssItemRepository.convertResultSetToListOfRssModel(resultSet);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 }

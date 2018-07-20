@@ -3,10 +3,12 @@ package webSiteRepository;
 import core.Core;
 import core.Service;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,7 @@ public class WebSiteRepository extends Service
         core.setWebSiteRepository(this);
     }
 
-    public void addWebSite(String link, String targetClass)
+    public void addWebSite(String link, String targetClass) throws SQLException, IOException, ParseException
     {
         if (getWebsite(link) != null)
             webPageInformationHashMap.remove(getWebsite(link).getId());
@@ -55,11 +57,12 @@ public class WebSiteRepository extends Service
             webPageInformationHashMap.put(newsWebPageModel.getId(), newsWebPageModel);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
     }
 
-    public NewsWebPageModel getWebsite(int id)
+    public NewsWebPageModel getWebsite(int id) throws SQLException
     {
         if (webPageInformationHashMap.containsKey(id))
             return webPageInformationHashMap.get(id);
@@ -80,13 +83,13 @@ public class WebSiteRepository extends Service
                 return newsWebPageModel;
             } catch (SQLException e)
             {
-                e.printStackTrace();
+                Core.getInstance().logToFile(e.getMessage());
+                throw e;
             }
         }
-        return null;
     }
 
-    public NewsWebPageModel getWebsite(String websiteLink)
+    public NewsWebPageModel getWebsite(String websiteLink) throws SQLException
     {
         try(Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -103,12 +106,12 @@ public class WebSiteRepository extends Service
             return getWebsite(resultSet.getInt("WID"));
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
-    public List<NewsWebPageModel> getWebsites()
+    public List<NewsWebPageModel> getWebsites() throws SQLException
     {
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -125,8 +128,8 @@ public class WebSiteRepository extends Service
             return ans;
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 }

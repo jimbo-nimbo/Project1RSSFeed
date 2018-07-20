@@ -25,7 +25,7 @@ public class DateEngine extends Service
         rssItemRepository = core.getRssRepository();
     }
 
-    public List<RSSItemModel> getSomeLastRssForWebsite(String newsWebPage, int num)
+    public List<RSSItemModel> getSomeLastRssForWebsite(String newsWebPage, int num) throws SQLException
     {
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -40,11 +40,11 @@ public class DateEngine extends Service
         } catch (SQLException e)
         {
             core.logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
-    public List<RSSItemModel> getNewsForWebsiteByDate(String newsWebPage, Date date)
+    public List<RSSItemModel> getNewsForWebsiteByDate(String newsWebPage, Date date) throws SQLException
     {
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -59,11 +59,11 @@ public class DateEngine extends Service
         } catch (SQLException e)
         {
             core.logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
-    public int getNewsCountForDay(String webLink, int dayPast)
+    public int getNewsCountForDay(String webLink, int dayPast) throws SQLException
     {
         return getNewsForWebsiteByDate(webLink,
                 new Date( System.currentTimeMillis() - DAY_IN_MIL_SECOND* dayPast)).size();

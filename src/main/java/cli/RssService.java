@@ -9,7 +9,10 @@ import searchEngine.SearchEngine;
 import webSiteRepository.NewsWebPageModel;
 import webSiteRepository.WebSiteRepository;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -40,75 +43,178 @@ public class RssService extends Service
 
     public CompletableFuture<Void> addWebSite(String websiteLink, String targetClass)
     {
-        return CompletableFuture.runAsync(() -> webSiteRepository.addWebSite(websiteLink, targetClass), executor);
+        return CompletableFuture.runAsync(() -> {
+            try
+            {
+                webSiteRepository.addWebSite(websiteLink, targetClass);
+            } catch (SQLException | IOException | ParseException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }, executor);
     }
 
     public CompletableFuture<List<NewsWebPageModel>> getWebSites()
     {
-        return CompletableFuture.supplyAsync(() -> webSiteRepository.getWebsites(),
+        return CompletableFuture.supplyAsync(() -> {
+                    try
+                    {
+                        return webSiteRepository.getWebsites();
+                    } catch (SQLException e)
+                    {
+                        System.out.println(e.getMessage());
+                        return new ArrayList<>();
+                    }
+                },
                 executor);
     }
 
     public CompletableFuture<Void> updateWebsite(String webSiteLink)
     {
-        return CompletableFuture.runAsync(() -> webSiteRepository.getWebsite(webSiteLink).update(), executor);
+        return CompletableFuture.runAsync(() -> {
+            try
+            {
+                webSiteRepository.getWebsite(webSiteLink).update();
+            } catch (SQLException | IOException | ParseException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }, executor);
     }
 
     public List<CompletableFuture<Void>> updateAllWebsites()
     {
         List<CompletableFuture<Void>> list = new ArrayList<>();
-        for (NewsWebPageModel newsWebPageModel : webSiteRepository.getWebsites())
-            list.add(updateWebsite(newsWebPageModel.getLink()));
+        try
+        {
+            for (NewsWebPageModel newsWebPageModel : webSiteRepository.getWebsites())
+                list.add(updateWebsite(newsWebPageModel.getLink()));
+        } catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
         return list;
     }
 
     public CompletableFuture<List<RSSItemModel>> getWebSiteRssData(String webPageLink)
     {
-        return CompletableFuture.supplyAsync(() ->rssItemRepository.rssForWebsite(webPageLink), executor);
+        return CompletableFuture.supplyAsync(() -> {
+            try
+            {
+                return rssItemRepository.rssForWebsite(webPageLink);
+            } catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+                return new ArrayList<>();
+            }
+        }, executor);
     }
 
     public CompletableFuture<List<RSSItemModel>> getAllRssData()
     {
-        return CompletableFuture.supplyAsync(() -> rssItemRepository.getAllRSSData(), executor);
+        return CompletableFuture.supplyAsync(() -> {
+            try
+            {
+                return rssItemRepository.getAllRSSData();
+            } catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+                return new ArrayList<>();
+            }
+        }, executor);
     }
 
     public CompletableFuture<List<RSSItemModel>> getTodayNewsForWebsite(String link)
     {
         return CompletableFuture.supplyAsync(() ->
-                dateEngine.getNewsForWebsiteByDate(link, new Date(System.currentTimeMillis())),executor);
+        {
+            try
+            {
+                return dateEngine.getNewsForWebsiteByDate(link, new Date(System.currentTimeMillis()));
+            } catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+                return new ArrayList<>();
+            }
+        },executor);
     }
 
     public CompletableFuture<List<RSSItemModel>> getSomeLastNewsForWebsite(String link, int num)
     {
         return CompletableFuture.supplyAsync(() ->
-        dateEngine.getSomeLastRssForWebsite(link, num), executor);
+        {
+            try
+            {
+                return dateEngine.getSomeLastRssForWebsite(link, num);
+            } catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+                return new ArrayList<>();
+            }
+        }, executor);
     }
 
     public CompletableFuture<Integer> getNewsCountForDate(String link, int dayPast)
     {
         return CompletableFuture.supplyAsync(() ->
-        dateEngine.getNewsCountForDay(link, dayPast),
+                {
+                    try
+                    {
+                        return dateEngine.getNewsCountForDay(link, dayPast);
+                    } catch (SQLException e)
+                    {
+                        System.out.println(e.getMessage());
+                        return 0;
+                    }
+                },
                 executor);
     }
 
     public CompletableFuture<List<RSSItemModel>> searchInArticles(String text)
     {
         return CompletableFuture.supplyAsync(() ->
-        searchEngine.searchArticle(text),
+                {
+                    try
+                    {
+                        return searchEngine.searchArticle(text);
+                    } catch (SQLException e)
+                    {
+                        System.out.println(e.getMessage());
+                        return new ArrayList<>();
+                    }
+                },
                 executor);
     }
 
     public CompletableFuture<List<RSSItemModel>> searchInTitles(String text)
     {
         return CompletableFuture.supplyAsync(() ->
-        searchEngine.searchTitle(text),
+                {
+                    try
+                    {
+                        return searchEngine.searchTitle(text);
+                    } catch (SQLException e)
+                    {
+                        System.out.println(e.getMessage());
+                        return new ArrayList<>();
+                    }
+                },
                 executor);
     }
 
     public CompletableFuture<List<RSSItemModel>> searchBoth(String text)
     {
         return CompletableFuture.supplyAsync(() ->
-        searchEngine.searchAll(text),
+                {
+                    try
+                    {
+                        return searchEngine.searchAll(text);
+                    } catch (SQLException e)
+                    {
+                        System.out.println(e.getMessage());
+                        return new ArrayList<>();
+                    }
+                },
                 executor);
     }
 }

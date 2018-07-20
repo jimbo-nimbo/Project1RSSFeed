@@ -15,7 +15,7 @@ public class DatePatterns
 	private static final String DATABASE_CONFIG_PATH = "src/main/resources/date_patterns.properties";
 	private List<String> patterns;
 
-	public DatePatterns()
+	public DatePatterns() throws IOException
 	{
 		Properties properties = new Properties();
 		try(InputStream inputStream = new FileInputStream(DATABASE_CONFIG_PATH))
@@ -25,7 +25,8 @@ public class DatePatterns
 			this.patterns = new ArrayList<>(Arrays.asList(patterns));
 		} catch (IOException e)
 		{
-			Core.getInstance().logToFile(e.toString());
+			Core.getInstance().logToFile(e.getMessage());
+			throw new IOException("cannot read the config file of date patterns (date_patterns.properties");
 		}
 	}
 

@@ -3,8 +3,6 @@ package cli;
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
 import core.Core;
-import rssRepository.RSSItemModel;
-import webSiteRepository.NewsWebPageModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,9 +14,16 @@ public class Cli
 
     RssService rssService = Core.getInstance().getRssService();
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args)
     {
-        ShellFactory.createConsoleShell("RssProject-Jimbo", "", new Cli()).commandLoop();
+        try
+        {
+            ShellFactory.createConsoleShell("RssProject-Jimbo", "", new Cli()).commandLoop();
+        } catch (IOException e)
+        {
+            Core.getInstance().logToFile(e.getMessage());
+            System.err.println("some problem happened to cli! (check the config file for more information)");
+        }
     }
 
     @Command
@@ -29,7 +34,7 @@ public class Cli
             return listToString(rssService.getWebSites().get());
         } catch (InterruptedException | ExecutionException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
             return null;
         }
     }
@@ -73,7 +78,7 @@ public class Cli
                 cf.get();
 
             }
-            return "all site updated!!";
+            return "all site checked!";
         } catch (InterruptedException | ExecutionException e)
         {
             e.printStackTrace();

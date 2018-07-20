@@ -29,7 +29,7 @@ public class RssItemRepository extends Service
         core.setRssRepository(this);
     }
 
-    public RSSItemModel getRSSItem(String link)
+    public RSSItemModel getRSSItem(String link) throws SQLException
     {
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -41,12 +41,12 @@ public class RssItemRepository extends Service
             return getRSSItem(resultSet.getInt("RID"));
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
-    public RSSItemModel getRSSItem(int id)
+    public RSSItemModel getRSSItem(int id) throws SQLException
     {
         if (linkRssModelMap.containsKey(id))
             return linkRssModelMap.get(id);
@@ -66,17 +66,17 @@ public class RssItemRepository extends Service
                 return rssItemModel;
             } catch (SQLException e)
             {
-                e.printStackTrace();
+                Core.getInstance().logToFile(e.getMessage());
+                throw e;
             }
         }
-        return null;
     }
 
     /**
      * only called from update method of NewsWebPageModel
      * @param rssItemModel generated object
      */
-    public void addRSSItem(RSSItemModel rssItemModel)
+    public void addRSSItem(RSSItemModel rssItemModel) throws SQLException
     {
         if (rssItemModel.getId() != -1 && linkRssModelMap.containsKey(rssItemModel.getId()))
             return;
@@ -107,11 +107,12 @@ public class RssItemRepository extends Service
             }
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
     }
 
-    public List<RSSItemModel> getAllRSSData()
+    public List<RSSItemModel> getAllRSSData() throws SQLException
     {
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -128,9 +129,9 @@ public class RssItemRepository extends Service
             return ans;
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
     /**
@@ -138,7 +139,7 @@ public class RssItemRepository extends Service
      * @param webPageLink
      * @return
      */
-    public List<RSSItemModel> rssForWebsite(String webPageLink)
+    public List<RSSItemModel> rssForWebsite(String webPageLink) throws SQLException
     {
         try (Connection conn = core.getDatabaseConnectionPool().getConnection())
         {
@@ -158,13 +159,13 @@ public class RssItemRepository extends Service
             return ans;
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 
 
-    public List<RSSItemModel> convertResultSetToListOfRssModel(ResultSet resultSet)
+    public List<RSSItemModel> convertResultSetToListOfRssModel(ResultSet resultSet) throws SQLException
     {
         try
         {
@@ -177,8 +178,8 @@ public class RssItemRepository extends Service
             return ans;
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            Core.getInstance().logToFile(e.getMessage());
+            throw e;
         }
-        return null;
     }
 }

@@ -9,6 +9,9 @@ import searchEngine.SearchEngine;
 import webSiteRepository.NewsWebPageModel;
 import webSiteRepository.WebSiteRepository;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class RssItemRepositoryTest {
@@ -27,7 +30,8 @@ public class RssItemRepositoryTest {
   public void tearDown() throws Exception {}
 
   @Test
-  public void addRSSItem() {
+  public void addRSSItem() throws IOException, ParseException, SQLException
+  {
     String link = "http://www.tabnak.ir/fa/news/817425/۵-کشته-و-مصدوم-در-تصادف-خونین-در-اردبیل";
     String title = "testlink";
     String description = "testlink";
@@ -39,14 +43,16 @@ public class RssItemRepositoryTest {
   }
 
   @Test
-  public void getAllRSSDataTest() {
+  public void getAllRSSDataTest() throws SQLException
+  {
     ArrayList<RSSItemModel> rssItemModels = (ArrayList<RSSItemModel>) rssItemRepository.getAllRSSData();
     for(RSSItemModel rssItemModel : rssItemModels){
       System.out.println(rssItemModel.toString());
     }
   }
   @Test
-  public void getRSSData() {
+  public void getRSSData() throws SQLException, IOException, ParseException
+  {
     NewsWebPageModel newsWebPageModel =
             webSiteRepository.getWebsite("https://www.isna.ir/rss");
     newsWebPageModel.update();
@@ -63,7 +69,8 @@ public class RssItemRepositoryTest {
 
 
   @Test
-  public void getRSSItemByID() {
+  public void getRSSItemByID() throws SQLException
+  {
 
       System.out.println(Core.getInstance().getRssRepository().getRSSItem(1).toString());
   }
@@ -71,7 +78,8 @@ public class RssItemRepositoryTest {
   @Test
   public void takeRssItemFromResultSetWithHashCheck() {}
   @Test
-  public void getRSSDataFromWebSiteTest() {
+  public void getRSSDataFromWebSiteTest() throws SQLException
+  {
     System.out.println(rssItemRepository.rssForWebsite("https://en.isna.ir/rss"));
   }
 

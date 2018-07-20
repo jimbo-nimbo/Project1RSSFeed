@@ -8,6 +8,7 @@ import rssRepository.RSSItemModel;
 import webSiteRepository.NewsWebPageModel;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DateEngineTest {
@@ -23,7 +24,8 @@ public class DateEngineTest {
   public void tearDown() throws Exception {}
 
   @Test
-  public void getNewsForWebsiteByDate() {
+  public void getNewsForWebsiteByDate() throws SQLException
+  {
     Date date = new Date(System.currentTimeMillis());
     date.setTime(date.getTime() - DAY_IN_MIL_SECOND);
     ArrayList<RSSItemModel> ans =
@@ -44,7 +46,8 @@ public class DateEngineTest {
   public void getNewsCountForDay() {}
 
   @Test
-  public void getSomeLastRssForWebsiteTest() {
+  public void getSomeLastRssForWebsiteTest() throws SQLException
+  {
     NewsWebPageModel newsWebPageModel = core.getWebSiteRepository().getWebsite(1);
     ArrayList<RSSItemModel> rssItemModels =
         (ArrayList<RSSItemModel>)
@@ -56,7 +59,8 @@ public class DateEngineTest {
   }
 
   @Test
-  public void getTodayNewsForWebsite() {
+  public void getTodayNewsForWebsite() throws SQLException
+  {
     Date today = new Date(System.currentTimeMillis());
     ArrayList<RSSItemModel> ans =
         (ArrayList<RSSItemModel>)
