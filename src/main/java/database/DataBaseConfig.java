@@ -18,9 +18,7 @@ public class DataBaseConfig
   public DataBaseConfig(String resourceName) throws IOException {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     Properties prop = new Properties();
-    InputStream input = null;
-    try {
-      input = loader.getResourceAsStream(resourceName);
+    try (InputStream input = loader.getResourceAsStream(resourceName)){
       prop.load(input);
 
       hostIP = prop.getProperty("HOST_IP").trim();
