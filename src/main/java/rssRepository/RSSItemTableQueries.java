@@ -23,7 +23,9 @@ public enum RSSItemTableQueries
     SELECT_RSS_ITEM_BY_ID("SELECT * FROM RssItem WHERE RID = ?;"),
     SELECT_ALL_RSS_FROM_WEBSITE_BY_WID("SELECT * FROM RssItem WHERE WID = ?;"),
     SELECT_ALL_RSS_ITEMS("SELECT * FROM RssItem;"),
-    DROP_RSS_ITEM("DROP TABLE RssItem;");
+    DROP_RSS_ITEM("DROP TABLE RssItem;"),
+    CLEAR_TABLE_RSSITEM("DELETE from RssItem;");
+
 
     private String query;
 

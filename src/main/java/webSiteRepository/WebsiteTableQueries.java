@@ -15,7 +15,8 @@ public enum WebsiteTableQueries {
   INSERT_INTO_TABLE("INSERT INTO WebSite (link, class, datePattern) VALUES (?,?,?);"),
   UPDATE_TARGET_CLASS_BY_LINK("UPDATE WebSite SET class = ?, datePattern = ? WHERE link = ?;"),
   SELECT_ALL_WEBSITES("SELECT * FROM WebSite;"),
-  DROP_WEB_SITE_TABLE("DROP TABLE WebSite;");
+  DROP_WEB_SITE_TABLE("DROP TABLE WebSite;"),
+  CLEAR_TABLE_WEB_SITE("DELETE from WebSite;");
 
   private String query;
 

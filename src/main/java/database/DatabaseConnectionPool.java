@@ -20,7 +20,7 @@ public class DatabaseConnectionPool extends Service
     public DatabaseConnectionPool(Core core) throws SQLException, IOException
     {
         super(core);
-        dataBaseConfig = new DataBaseConfig(DataBaseCreationQueries.DATABASE_CONFIG_PATH.toString());
+        dataBaseConfig = new DataBaseConfig(DataBaseCreationQueries.DATABASE_CONFIG_NAME.toString());
         try
         {
             comboPooledDataSource = new ComboPooledDataSource();
@@ -44,8 +44,14 @@ public class DatabaseConnectionPool extends Service
             throw new IOException("database error! (propertyVeto");
         }
 
-        try (Connection connection = getConnection())
-        {
+        try (Connection connection = comboPooledDataSource.getConnection()) {
+            connection
+                    .createStatement()
+                    .execute(
+                            DataBaseCreationQueries.CREATE_DATABASE_IF_NOT_EXISTS.toString()
+                                    + dataBaseConfig.getDbName()
+                                    + ";");
+            connection.createStatement().execute("USE " + dataBaseConfig.getDbName() + ";");
             connection
                     .createStatement()
                     .execute(

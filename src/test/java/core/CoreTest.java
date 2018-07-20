@@ -6,21 +6,18 @@ import org.junit.Test;
 
 public class CoreTest {
 
-  Core core;
+  Core core = Core.getInstance();
 
   @Before
   public void setUp() throws Exception {
-    core = Core.getInstance();
+    //core = Core.getInstance();
   }
 
   @After
   public void tearDown() throws Exception {}
 
   @Test
-  public void getInstance() {}
-
-  @Test
   public void logToFile() {
-    core.logToFile("testLog");
+    //core.logToFile("testLog");
   }
 }

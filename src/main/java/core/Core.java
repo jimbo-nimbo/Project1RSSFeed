@@ -16,8 +16,8 @@ public class Core
 {
     private static Core core;
     private DatabaseConnectionPool databaseConnectionPool;
-    private RssItemRepository rssRepository;
     private WebSiteRepository webSiteRepository;
+    private RssItemRepository rssRepository;
     private SearchEngine searchEngine;
     private DateEngine dateEngine;
     private RssService rssService;

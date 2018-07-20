@@ -15,18 +15,19 @@ public class DataBaseConfig
     private String username;
     private String password;
 
-    public DataBaseConfig(String url) throws IOException
-    {
-        Properties prop = new Properties();
-        try (InputStream input = new FileInputStream(url))
-        {
-            prop.load(input);
+  public DataBaseConfig(String resourceName) throws IOException {
+    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+    Properties prop = new Properties();
+    InputStream input = null;
+    try {
+      input = loader.getResourceAsStream(resourceName);
+      prop.load(input);
 
-            hostIP = prop.getProperty("HOST_IP").trim();
-            hostPort = prop.getProperty("HOST_PORT").trim();
-            dbName = prop.getProperty("DB_NAME").trim();
-            username = prop.getProperty("DB_USERNAME").trim();
-            password = prop.getProperty("DB_PASSWORD").trim();
+      hostIP = prop.getProperty("HOST_IP").trim();
+      hostPort = prop.getProperty("HOST_PORT").trim();
+      dbName = prop.getProperty("DB_NAME").trim();
+      username = prop.getProperty("DB_USERNAME").trim();
+      password = prop.getProperty("DB_PASSWORD").trim();
 
         } catch (IOException ex)
         {

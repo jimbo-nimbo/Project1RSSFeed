@@ -19,27 +19,27 @@ public class RssServiceTest {
 
   @Test
   public void addWebSite() {
-    try {
-      rssService.addWebSite("https://www.isna.ir/rss", "item-text");
-      rssService.addWebSite(
-          "https://www.yjc.ir/fa/rss/allnews", "body");
-      rssService.addWebSite(
-          "http://www.tabnak.ir/fa/rss/allnews", "item-text");
-      rssService.addWebSite(
-          "http://www.irna.ir/en/rss.aspx?kind=-1&area=0", "bodytext");
-      Thread.sleep(10000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      rssService.addWebSite("https://www.isna.ir/rss", "item-text");
+//      rssService.addWebSite(
+//          "https://www.yjc.ir/fa/rss/allnews", "body");
+//      rssService.addWebSite(
+//          "http://www.tabnak.ir/fa/rss/allnews", "item-text");
+//      rssService.addWebSite(
+//          "http://www.irna.ir/en/rss.aspx?kind=-1&area=0", "bodytext");
+//      Thread.sleep(10000);
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    }
   }
 
   @Test
   public void getWebSites() {
-    try {
-      System.out.println(rssService.getWebSites().get());
-    } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      System.out.println(rssService.getWebSites().get());
+//    } catch (InterruptedException | ExecutionException e) {
+//      e.printStackTrace();
+//    }
   }
 
   @Test
@@ -70,13 +70,13 @@ public class RssServiceTest {
 
   @Test
   public void getAllRssData() {
-    try {
-      System.out.println(rssService.getAllRssData().get().size());
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      System.out.println(rssService.getAllRssData().get().size());
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (ExecutionException e) {
+//      e.printStackTrace();
+//    }
   }
 
 

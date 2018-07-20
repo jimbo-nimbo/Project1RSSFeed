@@ -78,32 +78,32 @@ public class SearchEngineTest
         // searchEngine.searchTitle("bye");
         //        System.err.println(searchResult.get(0).getTitle());
         ArrayList<RSSItemModel> searchResult = (ArrayList<RSSItemModel>) searchEngine.searchTitle("10");
-        System.err.println(searchResult.get(0).getTitle());
+        //System.err.println(searchResult.get(0).getTitle());
         searchResult = (ArrayList<RSSItemModel>) searchEngine.searchTitle("برق");
-        System.err.println(searchResult.get(0).getTitle());
+        //System.err.println(searchResult.get(0).getTitle());
     }
 
     @Test
     public void searchArticle() throws SQLException
     {
-        ArrayList<RSSItemModel> searchResult =
-                (ArrayList<RSSItemModel>) searchEngine.searchArticle("hello");
-        System.err.println(searchResult.get(0).getTitle());
-        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("24");
-        System.err.println(searchResult.get(0).getArticle());
-        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("اسپورت");
-        System.err.println(searchResult.get(0).getArticle());
+//        ArrayList<RSSItemModel> searchResult =
+//                (ArrayList<RSSItemModel>) searchEngine.searchArticle("hello");
+//        System.err.println(searchResult.get(0).getTitle());
+//        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("24");
+//        System.err.println(searchResult.get(0).getArticle());
+//        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchArticle("اسپورت");
+//        System.err.println(searchResult.get(0).getArticle());
     }
 
     @Test
     public void searchAll() throws SQLException
     {
-        ArrayList<RSSItemModel> searchResult =
-                (ArrayList<RSSItemModel>) searchEngine.searchAll("hello");
-        System.err.println(searchResult.get(0).getTitle());
-        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("24");
-        System.err.println(searchResult.get(0).getArticle());
-        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("اسپورت");
-        System.err.println(searchResult.get(0).getArticle());
+//        ArrayList<RSSItemModel> searchResult =
+//                (ArrayList<RSSItemModel>) searchEngine.searchAll("hello");
+//        System.err.println(searchResult.get(0).getTitle());
+//        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("24");
+//        System.err.println(searchResult.get(0).getArticle());
+//        searchResult = (ArrayList<RSSItemModel>) searchEngine.searchAll("اسپورت");
+//        System.err.println(searchResult.get(0).getArticle());
     }
 }
