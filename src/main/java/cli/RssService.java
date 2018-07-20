@@ -38,7 +38,16 @@ public class RssService extends Service
 
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(this::updateAllWebsites, 0, 100, TimeUnit.SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(() ->{
+            try
+            {
+                for (NewsWebPageModel newsWebPageModel: webSiteRepository.getWebsites())
+                    newsWebPageModel.update();
+            } catch (SQLException | ParseException | IOException e)
+            {
+                Core.getInstance().logToFile(e.getMessage());
+            }
+        }, 0, 100, TimeUnit.SECONDS);
     }
 
     public CompletableFuture<Void> addWebSite(String websiteLink, String targetClass)

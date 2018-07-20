@@ -170,24 +170,22 @@ public class RSSItemModel
     @Override
     public String toString()
     {
-        return "RSSItemModel{"
-                + "title='"
+        return
+                 "title: "
                 + title
-                + '\''
-                + ", description='"
+                + '\n'
+                + "description: "
                 + description
-                + '\''
-                + ", link='"
+                + '\n'
+                + "link: "
                 + link
-                + '\''
-                + ", article='"
+                + '\n'
+                + "article: "
                 + article
-                + '\''
-                + ", dateString='"
+                + '\n'
+                + "dateString: "
                 + dateString
-                + '\''
-                + ", newsWebPageModel="
-                + newsWebPageModel.toString()
-                + '}';
+                + '\n'
+                + "-------------------------------------------------------------------";
     }
 }

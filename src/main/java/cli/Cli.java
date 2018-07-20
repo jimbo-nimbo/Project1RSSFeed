@@ -59,7 +59,7 @@ public class Cli
         try
         {
             rssService.updateWebsite(link).get();
-            return link + "updated!";
+            return link + " updated!";
         } catch (InterruptedException | ExecutionException e)
         {
             e.printStackTrace();

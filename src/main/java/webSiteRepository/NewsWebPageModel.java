@@ -186,13 +186,10 @@ public class NewsWebPageModel
     @Override
     public String toString()
     {
-        return "NewsWebPageModel{" +
-                "id=" + id +
-                ", link='" + link + '\'' +
-                ", targetClass='" + targetClass + '\'' +
-                ", datePattern='" + datePattern + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return
+                "link: " + link + '\n' +
+                "targetClass: " + targetClass + '\n' +
+                "datePattern: " + datePattern + '\n' +
+                "====================================================";
     }
 }
