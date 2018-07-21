@@ -78,17 +78,22 @@ public class RssService extends Service
                 executor);
     }
 
-    public CompletableFuture<Void> updateWebsite(String webSiteLink)
+    public CompletableFuture<Void> updateWebsite(String webSiteLink) throws SQLException
     {
-        return CompletableFuture.runAsync(() -> {
-            try
-            {
-                webSiteRepository.getWebsite(webSiteLink).update();
-            } catch (SQLException | IOException | ParseException e)
-            {
-                System.out.println(e.getMessage());
+    return CompletableFuture.runAsync(
+        () -> {
+          try {
+            if (webSiteRepository.getWebsite(webSiteLink) != null) {
+              webSiteRepository.getWebsite(webSiteLink).update();
+            }else {
+                throw new SQLException("this site isnt in dataBase");
             }
-        }, executor);
+
+          } catch (SQLException | IOException | ParseException e) {
+            System.out.println(e.getMessage());
+          }
+        },
+        executor);
     }
 
     public List<CompletableFuture<Void>> updateAllWebsites()

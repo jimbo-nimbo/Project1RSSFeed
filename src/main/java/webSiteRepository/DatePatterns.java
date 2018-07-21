@@ -10,15 +10,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class DatePatterns
+class DatePatterns
 {
-	private static final String DATABASE_CONFIG_PATH = "src/main/resources/date_patterns.properties";
+	//private static final String DATABASE_CONFIG_PATH = "src/main/resources/date_patterns.properties";
+	private static final String DATABASE_CONFIG_NAME = "date_patterns.properties";
 	private List<String> patterns;
 
-	public DatePatterns() throws IOException
+	DatePatterns() throws IOException
 	{
 		Properties properties = new Properties();
-		try(InputStream inputStream = new FileInputStream(DATABASE_CONFIG_PATH))
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		try(InputStream inputStream = loader.getResourceAsStream(DATABASE_CONFIG_NAME))
 		{
 			properties.load(inputStream);
 			String[] patterns = properties.getProperty("patterns").split("#");
@@ -30,7 +32,7 @@ public class DatePatterns
 		}
 	}
 
-	public List<String > getPatterns()
+	List<String > getPatterns()
 	{
 		return patterns;
 	}

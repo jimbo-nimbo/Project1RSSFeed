@@ -49,9 +49,9 @@ public class RssServiceTest {
 
   @Test
   public void updateDatabaseForWebsite() {
-    rssService.updateWebsite("https://www.isna.ir/rss");
-    rssService.updateWebsite("https://www.yjc.ir/fa/rss/allnews");
-    rssService.updateWebsite("http://www.tabnak.ir/fa/rss/allnews");
+//    rssService.updateWebsite("https://www.isna.ir/rss");
+//    rssService.updateWebsite("https://www.yjc.ir/fa/rss/allnews");
+//    rssService.updateWebsite("http://www.tabnak.ir/fa/rss/allnews");
   }
 
   @Test
