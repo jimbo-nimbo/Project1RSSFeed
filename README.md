@@ -9,6 +9,9 @@ to get connect to our service
 
 run mysql server First :)
 
+install maven
+and use it to make package
+
 To use our Code:
 
 definition:
