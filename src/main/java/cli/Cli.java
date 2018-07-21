@@ -37,8 +37,11 @@ public class Cli {
   @Command
   public String addWebSite(String link, String targetClass) {
     try {
-      rssService.addWebSite(link, targetClass).get();
-      return "website added!";
+      boolean ans = rssService.addWebSite(link, targetClass).get();
+      if(ans)
+        return "website added!";
+      else
+        return "website not added";
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
       return null;

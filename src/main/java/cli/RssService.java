@@ -50,15 +50,17 @@ public class RssService extends Service
         }, 0, 100, TimeUnit.SECONDS);
     }
 
-    public CompletableFuture<Void> addWebSite(String websiteLink, String targetClass)
+    public CompletableFuture<Boolean> addWebSite(String websiteLink, String targetClass)
     {
-        return CompletableFuture.runAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             try
             {
                 webSiteRepository.addWebSite(websiteLink, targetClass);
+                return true;
             } catch (SQLException | IOException | ParseException e)
             {
                 System.out.println(e.getMessage());
+                return false;
             }
         }, executor);
     }

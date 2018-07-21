@@ -46,7 +46,6 @@ public class SearchEngineTest
         }
     }
 
-    @Test
     public void injectDate()
     {
         String title = "byeTestblahblah";
